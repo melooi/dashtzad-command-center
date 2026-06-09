@@ -34,6 +34,23 @@ Phase Zero is **documentation and planning only**. Nothing below exists in this 
 - No coupon generation logic
 - No approval gateway implementation
 
+## Initial Seed Data Plan
+
+After Laravel and Filament are installed and migrations have run, seeders and config files will be added for the following:
+
+| Seed | Purpose |
+|------|---------|
+| **Roles** | Initial role set (e.g. Super Admin, Manager, Operator) wired into Filament access policies |
+| **Tools Registry** | Registry of available command-center tools/actions with metadata (name, category, requires approval) |
+| **Notification Channels** | Supported output channels (SMS, Telegram, Bale, email) with enabled/disabled state |
+| **API Provider Types** | Named provider types for external integrations (WooCommerce, OpenAI, Claude, SMS gateway, etc.) |
+| **Task Statuses & Priorities** | Lookup values for task/job tracking (e.g. pending, in-progress, done; low, normal, high, critical) |
+| **Approval Action Types** | Enumeration of action categories that require the Approval Gateway (price change, publish, bulk SMS, etc.) |
+
+None of these seeders or config files will be created until the framework is installed in a real environment. This section is a planning reference only.
+
+---
+
 ## Why
 
 Laravel and Filament must be installed via Composer with Packagist access. The current CI/cloud environment blocks outbound traffic to `packagist.org`. Installation will be performed on a local Mac, VPS, or GitHub Codespaces where Packagist is reachable. See [docs/setup.md](setup.md) for exact commands.

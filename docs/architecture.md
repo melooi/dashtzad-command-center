@@ -31,7 +31,9 @@ dashtzad-command-center/
 
 ## Key Layers
 
-### Admin Panel (Filament 3)
+### Admin Panel (Filament Admin Panel, using the latest stable version compatible with the selected Laravel version)
+
+> The exact Laravel/Filament versions must be finalized during real Composer installation in an environment with Packagist access.
 
 All UI lives inside the Filament admin panel at `/admin`. Filament generates:
 - **Resources** — list/create/edit/view pages backed by Eloquent models

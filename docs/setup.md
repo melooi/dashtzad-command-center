@@ -14,35 +14,55 @@ Packagist (`repo.packagist.org`) must be reachable from the machine running Comp
 
 ---
 
+## Important: This Repository Is Not Empty
+
+Do **not** run `composer create-project laravel/laravel .` directly inside this repository. The directory already contains `README.md`, `ROADMAP.md`, `SECURITY.md`, and `docs/` — Composer will refuse to install into a non-empty directory.
+
+Use the safe flow below instead.
+
+---
+
 ## Local Setup (Mac)
 
 ```bash
-# 1. Install Laravel project
-composer create-project laravel/laravel dashtzad-command-center
+# 1. Go to the parent directory of your cloned repo
+cd ..
+
+# 2. Install Laravel into a temporary folder
+composer create-project laravel/laravel dashtzad-command-center-laravel
+
+# 3. Copy Laravel files into the repo, preserving existing docs
+rsync -av \
+  --exclude=".git" \
+  --exclude="README.md" \
+  --exclude="ROADMAP.md" \
+  --exclude="SECURITY.md" \
+  --exclude="docs" \
+  dashtzad-command-center-laravel/ dashtzad-command-center/
+
+# 4. Enter the repo
 cd dashtzad-command-center
 
-# 2. Install Filament
-composer require filament/filament:"^3.0" -W
+# 5. Install Filament (latest stable version compatible with your Laravel version)
+composer require filament/filament -W
 
-# 3. Scaffold the Filament admin panel
+# 6. Scaffold the Filament admin panel
 php artisan filament:install --panels
 
-# 4. Copy environment file and set values
+# 7. Configure environment
 cp .env.example .env
 php artisan key:generate
+# Edit .env — set DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
-# 5. Edit .env — set DB_DATABASE, DB_USERNAME, DB_PASSWORD
-#    then run migrations
+# 8. Run migrations and create the first admin user
 php artisan migrate
-
-# 6. Create the first admin user
 php artisan make:filament-user
 
-# 7. Start the dev server
+# 9. Start the dev server
 php artisan serve
 ```
 
-Visit `http://localhost:8000/admin` and log in with the credentials you set in step 6.
+Visit `http://localhost:8000/admin` and log in with the credentials you set in step 8.
 
 ---
 
@@ -59,22 +79,51 @@ sudo apt install -y php8.2 php8.2-cli php8.2-mbstring php8.2-xml \
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
-# Clone the repo and install
+# Clone the repo
 git clone https://github.com/melooi/dashtzad-command-center.git
+cd ..
+
+# Install Laravel into a temporary folder
+composer create-project laravel/laravel dashtzad-command-center-laravel
+
+# Copy Laravel files into the repo, preserving existing docs
+rsync -av \
+  --exclude=".git" \
+  --exclude="README.md" \
+  --exclude="ROADMAP.md" \
+  --exclude="SECURITY.md" \
+  --exclude="docs" \
+  dashtzad-command-center-laravel/ dashtzad-command-center/
+
 cd dashtzad-command-center
 
-composer create-project laravel/laravel .
-composer require filament/filament:"^3.0" -W
+# Install Filament
+composer require filament/filament -W
 php artisan filament:install --panels
 
 cp .env.example .env
 php artisan key:generate
-
 # Edit .env for your database, then:
 php artisan migrate
 php artisan make:filament-user
 
 # For production — point your web server document root to /public
+```
+
+---
+
+## GitHub Codespaces
+
+Packagist is accessible by default in Codespaces. Open the repository in a Codespace, then follow the Mac steps above from step 1 onward. No additional network configuration needed.
+
+---
+
+## Cleanup After Install
+
+Once Laravel files are copied into the repo and verified, the temporary folder can be removed:
+
+```bash
+rm -rf ../dashtzad-command-center-laravel
 ```
 
 ---
@@ -104,4 +153,4 @@ QUEUE_CONNECTION=sync  # change to database or redis for background jobs
 
 ## Note on This Repository
 
-This repository currently contains **documentation only**. The actual Laravel and Filament installation must be performed locally or on a VPS where Packagist is accessible. The commands above are the exact steps to bootstrap the project.
+This repository currently contains **documentation only**. The actual Laravel and Filament installation must be performed locally, on a VPS, or in GitHub Codespaces where Packagist is accessible. See [docs/mvp-scope.md](mvp-scope.md) for a full list of what is and is not included in Phase Zero.

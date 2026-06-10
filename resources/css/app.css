@@ -3,7 +3,87 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* IRANYekanX — Local Fonts */
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Thin.woff') format('woff');
+    font-weight: 100; font-display: swap;
 }
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-UltraLight.woff') format('woff');
+    font-weight: 200; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Light.woff') format('woff');
+    font-weight: 300; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Regular.woff') format('woff');
+    font-weight: 400; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Medium.woff') format('woff');
+    font-weight: 500; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-DemiBold.woff') format('woff');
+    font-weight: 600; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Bold.woff') format('woff');
+    font-weight: 700; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-ExtraBold.woff') format('woff');
+    font-weight: 800; font-display: swap;
+}
+@font-face {
+    font-family: 'IRANYekanX';
+    src: url('/fonts/IRANYekanX-Heavy.woff') format('woff');
+    font-weight: 900; font-display: swap;
+}
+
+@theme {
+    --font-sans: 'IRANYekanX', Tahoma, Arial, sans-serif;
+    --color-slate-850: #151e2e;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Fade transitions for drawers & modals */
+.hidden-fade {
+    opacity: 0; pointer-events: none; visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+.visible-fade {
+    opacity: 1; pointer-events: auto; visibility: visible;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Connection card hover */
+.clickable-card { cursor: pointer; }
+.clickable-card:hover .card-title { color: #818cf8; }
+
+/* Kanban drag & drop */
+.kanban-col { transition: background-color 0.15s ease; }
+.kanban-col.drag-over {
+    background-color: rgba(30, 41, 59, 0.8);
+    border-color: #6366f1 !important;
+    border-style: dashed !important;
+}
+.kanban-card.dragging { opacity: 0.5; transform: scale(0.95); }
+
+/* Utility */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

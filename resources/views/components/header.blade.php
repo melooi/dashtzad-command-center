@@ -31,7 +31,7 @@
 
         {{-- Jalali date —— desktop only --}}
         <div class="hidden lg:block text-sm text-slate-400 border-l border-slate-800 pl-5 ml-1">
-            امروز: <span class="text-slate-200 font-medium">—</span>
+            <span data-header-datetime>امروز: —</span>
         </div>
 
         {{-- Notifications bell --}}

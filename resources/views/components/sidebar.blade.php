@@ -5,13 +5,13 @@
     <div class="sb-logo-area h-16 flex items-center justify-between shrink-0 px-4 border-b border-slate-800/80">
 
         <div class="flex items-center gap-3 min-w-0">
-            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center
-                        shadow-lg shadow-indigo-900/30 shrink-0">
+            <div class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center
+                        shadow-lg shadow-brand-primary/20 shrink-0">
                 <i class="fa-solid fa-bolt text-white text-sm"></i>
             </div>
             <div class="sb-text min-w-0">
-                <span class="font-bold text-white text-base tracking-wide">دشت‌زاد</span>
-                <span class="text-xs font-normal text-indigo-400 mr-1">پنل</span>
+                <span class="font-bold text-slate-200 text-base tracking-wide">دشت‌زاد</span>
+                <span class="text-xs font-normal text-brand-secondary mr-1">پنل</span>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                 onclick="navigateTo('/products/quick-create')"
                 data-nav-path="/products/quick-create"
                 class="nav-btn w-full text-right flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-colors
-                       {{ request()->is('products/quick-create') ? 'text-indigo-400 bg-indigo-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                       {{ request()->is('products/quick-create') ? 'text-brand-primary bg-brand-primary/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
                 افزودن سریع (شیت)
             </button>
             <x-nav.subitem tab="products-incomplete">محصولات ناقص</x-nav.subitem>
@@ -125,7 +125,7 @@
             onclick="navigateTo('/changelog')"
             data-nav-path="/changelog"
             title="گزارش آپدیت‌ها"
-            class="{{ request()->is('changelog') ? 'bg-indigo-600/10 !text-indigo-400' : '' }}">
+            class="{{ request()->is('changelog') ? 'bg-brand-primary/10 !text-brand-primary' : '' }}">
             <i class="fa-solid fa-book-open text-lg shrink-0"></i>
             <span class="mr-3 font-medium sb-text text-sm">گزارش آپدیت‌ها</span>
         </x-nav.item>

@@ -11,7 +11,7 @@
 
 <details class="group [&_summary::-webkit-details-marker]:hidden" @if($open) open @endif>
     <summary class="sb-group-summary flex items-center px-3 py-2.5 rounded-xl text-slate-400
-                    hover:text-white hover:bg-slate-800 transition-colors cursor-pointer select-none"
+                    hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer select-none"
              title="{{ $title }}">
 
         {{-- Icon --}}
@@ -20,7 +20,7 @@
         </span>
 
         {{-- Label --}}
-        <span class="mr-3 font-medium text-sm flex-1 group-open:text-white transition-colors sb-text">
+        <span class="mr-3 font-medium text-sm flex-1 group-open:text-slate-200 transition-colors sb-text">
             {{ $title }}
         </span>
 

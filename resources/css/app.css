@@ -3,6 +3,8 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* IRANYekanX — Local Fonts */
 @font-face {
     font-family: 'IRANYekanX';
@@ -53,7 +55,45 @@
 @theme {
     --font-sans: 'IRANYekanX', Tahoma, Arial, sans-serif;
     --color-slate-850: #151e2e;
+
+    /* Brand palette */
+    --color-brand-primary:   #315A3A;
+    --color-brand-secondary: #A8794A;
+    --color-brand-tertiary:  #C9A66B;
+    --color-brand-neutral:   #767874;
 }
+
+/* ── Light mode: remap dark slate utilities ─────────────────────────────── */
+html:not(.dark) {
+    --color-slate-950: #f4f4f5;
+    --color-slate-900: #ffffff;
+    --color-slate-850: #f0f0ee;
+    --color-slate-800: #e4e4e7;
+    --color-slate-700: #d1d1d5;
+    --color-slate-600: #52525b;
+    --color-slate-500: #71717a;
+    --color-slate-400: #6b7280;
+    --color-slate-300: #374151;
+    --color-slate-200: #1f2937;
+    --color-slate-100: #f9fafb;
+    --color-slate-50:  #f3f4f6;
+    /* indigo → brand-primary so existing indigo classes adapt */
+    --color-indigo-600: #315A3A;
+    --color-indigo-500: #3d6e47;
+    --color-indigo-400: #315A3A;
+    --color-indigo-900: rgba(49, 90, 58, 0.15);
+}
+html:not(.dark) .text-white               { color: #1a1a1a; }
+html:not(.dark) .hover\:text-white:hover  { color: #1a1a1a; }
+html:not(.dark) .group-open\:text-white   { color: #1a1a1a; }
+html:not(.dark) ::-webkit-scrollbar-thumb              { background: #d4d4d8; }
+html:not(.dark) ::-webkit-scrollbar-thumb:hover        { background: #a1a1aa; }
+html:not(.dark) #pjax-bar.pjax-running                { background: rgba(49,90,58,0.12); }
+html:not(.dark) #pjax-bar.pjax-running::after         { background: #315A3A; }
+html:not(.dark) .kanban-col.drag-over                  { background-color: rgba(49,90,58,0.08); border-color: #315A3A !important; }
+html:not(.dark) .sheet-input                           { color: #1f2937; }
+html:not(.dark) .sheet-input:focus                     { background-color: #f1f5f9; box-shadow: inset 0 0 0 2px #315A3A; }
+html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(244,63,94,0.05) !important; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -76,13 +116,33 @@
 .clickable-card:hover .card-title { color: #818cf8; }
 
 /* Kanban drag & drop */
-.kanban-col { transition: background-color 0.15s ease; }
+.kanban-col { transition: background-color 0.15s ease, border-color 0.15s ease; }
 .kanban-col.drag-over {
-    background-color: rgba(30, 41, 59, 0.8);
-    border-color: #6366f1 !important;
+    background-color: rgba(49, 90, 58, 0.1);
+    border-color: #315A3A !important;
     border-style: dashed !important;
 }
-.kanban-card.dragging { opacity: 0.5; transform: scale(0.95); }
+.kanban-card.dragging  { opacity: 0.45; transform: scale(0.97); }
+.kanban-card.tm-ghost  { opacity: 0.3; }
+
+/* Task checkbox */
+.task-checkbox {
+    appearance: none; -webkit-appearance: none;
+    width: 1.1rem; height: 1.1rem;
+    border: 2px solid #52525b;
+    border-radius: 50%;
+    outline: none; cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative; flex-shrink: 0;
+}
+.task-checkbox:checked { background-color: #315A3A; border-color: #315A3A; }
+.task-checkbox:checked::after {
+    content: '';
+    position: absolute; left: 50%; top: 45%;
+    width: 3px; height: 6px;
+    border: solid white; border-width: 0 2px 2px 0;
+    transform: translate(-50%,-50%) rotate(45deg);
+}
 
 /* Utility */
 .hide-scrollbar::-webkit-scrollbar { display: none; }

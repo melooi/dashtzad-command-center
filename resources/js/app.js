@@ -112,7 +112,7 @@ function switchTab(tabId) {
     });
 
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400');
+        btn.classList.remove('bg-brand-primary/10', 'text-brand-primary');
         btn.classList.add('text-slate-400');
     });
 
@@ -120,7 +120,7 @@ function switchTab(tabId) {
 
     const navBtn = document.getElementById('nav-' + tabId);
     if (navBtn) {
-        navBtn.classList.add('bg-indigo-600/10', 'text-indigo-400');
+        navBtn.classList.add('bg-brand-primary/10', 'text-brand-primary');
         navBtn.classList.remove('text-slate-400');
     }
 
@@ -1000,19 +1000,19 @@ function _pjaxAfterLoad(state) {
 
 function _pjaxUpdateNav(state) {
     document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400');
+        btn.classList.remove('bg-brand-primary/10', 'text-brand-primary');
         btn.classList.add('text-slate-400');
     });
 
     if (state.tab) {
         const el = document.getElementById('nav-' + state.tab);
-        if (el) { el.classList.add('bg-indigo-600/10', 'text-indigo-400'); el.classList.remove('text-slate-400'); }
+        if (el) { el.classList.add('bg-brand-primary/10', 'text-brand-primary'); el.classList.remove('text-slate-400'); }
     }
 
     if (state.path) {
         document.querySelectorAll('[data-nav-path]').forEach(btn => {
             if (btn.dataset.navPath === state.path) {
-                btn.classList.add('bg-indigo-600/10', 'text-indigo-400');
+                btn.classList.add('bg-brand-primary/10', 'text-brand-primary');
                 btn.classList.remove('text-slate-400');
             }
         });
@@ -1032,6 +1032,331 @@ window.addEventListener('popstate', e => {
         _pjaxLoad(window.location.href, s, { push: false });
     }
 });
+
+// ─── Theme Toggle ────────────────────────────────────────────────────────────
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('dashtzad_theme', isDark ? 'dark' : 'light');
+    _updateThemeIcon();
+}
+
+function _updateThemeIcon() {
+    const icon = document.getElementById('theme-icon');
+    if (!icon) return;
+    const isDark = document.documentElement.classList.contains('dark');
+    icon.className = isDark ? 'fa-solid fa-sun text-brand-tertiary text-lg' : 'fa-solid fa-moon text-slate-400 text-lg';
+}
+
+// ─── Task Manager ─────────────────────────────────────────────────────────────
+
+const _TM_COLS = [
+    { id: 'backlog',     title: 'در صف',        dot: '#64748b' },
+    { id: 'today',       title: 'امروز',         dot: '#315A3A' },
+    { id: 'in_progress', title: 'در حال انجام',  dot: '#3b82f6' },
+    { id: 'review',      title: 'بررسی',         dot: '#a855f7' },
+    { id: 'done',        title: 'انجام‌شده',     dot: '#10b981' },
+    { id: 'blocked',     title: 'مسدود',         dot: '#f43f5e' },
+];
+
+const _TM_PRI = {
+    high:      { label: 'فوری',  cls: 'text-rose-500 bg-rose-500/10',   icon: 'fa-fire text-rose-500'   },
+    important: { label: 'مهم',   cls: 'text-amber-400 bg-amber-400/10', icon: 'fa-bolt text-amber-400'  },
+    normal:    { label: 'عادی', cls: 'text-slate-400 bg-slate-400/10', icon: 'fa-minus text-slate-400' },
+};
+
+let _tmTasks = [
+    { id: 1, title: 'طراحی دیتابیس محصولات', status: 'in_progress', priority: 'high',      date: '۲۵ خرداد', overdue: false, category: 'بک‌اند',  assignee: 'علی رضایی',  ai: 'ع‌ر', project: 'دشت‌زاد' },
+    { id: 2, title: 'اتصال به WooCommerce',   status: 'blocked',     priority: 'normal',    date: '۲۳ خرداد', overdue: true,  category: 'توسعه',    assignee: 'سارا محمدی', ai: 'س‌م', project: 'باملو'    },
+    { id: 3, title: 'محتوای محصولات جدید',    status: 'today',       priority: 'important', date: '۲۱ خرداد', overdue: false, category: 'محتوا',    assignee: 'تیم محتوا',  ai: 'ت‌م', project: 'دشت‌زاد' },
+    { id: 4, title: 'بررسی گزارش‌های ماهانه', status: 'review',      priority: 'important', date: '۲۴ خرداد', overdue: false, category: 'مدیریت',   assignee: 'علی رضایی',  ai: 'ع‌ر', project: 'دشت‌زاد' },
+    { id: 5, title: 'راه‌اندازی ارسال پیامک',  status: 'backlog',     priority: 'normal',    date: '—',         overdue: false, category: 'توسعه',    assignee: 'تیم فنی',    ai: 'ت‌ف', project: 'هسته'    },
+    { id: 6, title: 'بهینه‌سازی تصاویر سایت', status: 'done',        priority: 'normal',    date: '۲۰ خرداد', overdue: false, category: 'سایت',     assignee: 'سارا محمدی', ai: 'س‌م', project: 'دشت‌زاد' },
+];
+
+let _tmCurrentId = null;
+let _tmDragId    = null;
+
+function _tmRenderMetrics() {
+    const g = id => document.getElementById(id);
+    if (!g('tm-m-total')) return;
+    g('tm-m-total').textContent   = _tmTasks.filter(t => t.status === 'today').length;
+    g('tm-m-overdue').textContent = _tmTasks.filter(t => t.overdue && t.status !== 'done').length;
+    g('tm-m-urgent').textContent  = _tmTasks.filter(t => t.priority === 'high' && t.status !== 'done').length;
+    g('tm-m-review').textContent  = _tmTasks.filter(t => t.status === 'review').length;
+    g('tm-m-done').textContent    = _tmTasks.filter(t => t.status === 'done').length;
+}
+
+function _tmRenderList() {
+    const c = document.getElementById('tm-list-container');
+    if (!c) return;
+    if (!_tmTasks.length) {
+        c.innerHTML = '<div class="text-center p-10 text-slate-500 text-sm">هیچ تسکی یافت نشد.</div>';
+        _tmRenderMetrics();
+        return;
+    }
+    c.innerHTML = _tmTasks.map(t => {
+        const done = t.status === 'done';
+        const col  = _TM_COLS.find(c => c.id === t.status) || _TM_COLS[0];
+        const pri  = _TM_PRI[t.priority] || _TM_PRI.normal;
+        return `
+        <div class="flex items-center justify-between p-4 hover:bg-slate-800/30 transition-colors cursor-pointer"
+             onclick="tmOpenModal(${t.id})">
+            <div class="flex items-center gap-4 flex-1 min-w-0">
+                <input type="checkbox" class="task-checkbox shrink-0" ${done ? 'checked' : ''}
+                       onclick="event.stopPropagation(); tmChangeStatus(${t.id}, '${done ? 'today' : 'done'}')">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <h4 class="text-sm font-bold truncate ${done ? 'text-slate-500 line-through' : 'text-slate-200'}">${t.title}</h4>
+                        ${t.overdue && !done ? '<span class="shrink-0 text-[10px] bg-rose-500/10 text-rose-500 px-1.5 py-0.5 rounded font-bold">عقب‌افتاده</span>' : ''}
+                    </div>
+                    <div class="flex items-center gap-3 text-[11px] text-slate-500">
+                        <span class="px-1.5 py-0.5 rounded border border-slate-800 bg-slate-800/50">${t.category}</span>
+                        <span><i class="fa-regular fa-calendar text-[10px]"></i> ${t.date}</span>
+                        <span>${t.project}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <span class="hidden md:flex items-center gap-1 px-2 py-0.5 rounded text-[10px] ${pri.cls}">
+                    <i class="fa-solid ${pri.icon} text-[10px]"></i> ${pri.label}
+                </span>
+                <div class="hidden sm:flex items-center gap-2 px-2 py-1 rounded-lg border border-slate-800 bg-slate-900">
+                    <span class="w-2 h-2 rounded-full inline-block" style="background:${col.dot}"></span>
+                    <span class="text-[11px] font-bold text-slate-400">${col.title}</span>
+                </div>
+                <div class="w-7 h-7 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center text-[10px] font-bold">${t.ai}</div>
+            </div>
+        </div>`;
+    }).join('');
+    _tmRenderMetrics();
+}
+
+function _tmRenderKanban() {
+    const board = document.getElementById('tm-kanban-board');
+    if (!board) return;
+    board.innerHTML = '';
+    _TM_COLS.forEach(col => {
+        const tasks = _tmTasks.filter(t => t.status === col.id);
+        const el    = document.createElement('div');
+        el.className = 'w-72 shrink-0 flex flex-col bg-slate-900/50 rounded-2xl border border-slate-800 kanban-col';
+        el.style.minHeight = '200px';
+        el.setAttribute('ondragover',  'tmAllowDrop(event)');
+        el.setAttribute('ondragleave', 'tmDragLeave(event)');
+        el.setAttribute('ondrop',      `tmDrop(event,'${col.id}')`);
+        el.innerHTML = `
+            <div class="p-3 border-b border-slate-800/60 flex justify-between items-center sticky top-0 z-10 bg-slate-900 rounded-t-2xl">
+                <h3 class="font-bold text-sm text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full inline-block" style="background:${col.dot}"></span>
+                    ${col.title}
+                </h3>
+                <span class="bg-slate-800 text-slate-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-slate-700">${tasks.length}</span>
+            </div>
+            <div class="p-3 space-y-3 overflow-y-auto flex-1 hide-scrollbar">
+                ${tasks.map(t => {
+                    const done  = t.status === 'done';
+                    const pri   = _TM_PRI[t.priority] || _TM_PRI.normal;
+                    const border = t.overdue && !done ? 'border-rose-500/40' : 'border-slate-800 hover:border-brand-primary/30';
+                    return `
+                    <div class="kanban-card bg-slate-900 p-3 rounded-xl border ${border} cursor-grab transition-all shadow-sm"
+                         draggable="true"
+                         ondragstart="tmDrag(event,${t.id})"
+                         onclick="tmOpenModal(${t.id})">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-bold px-1.5 py-0.5 bg-slate-800 text-slate-400 rounded border border-slate-700">${t.category}</span>
+                            ${t.overdue && !done ? '<span class="text-[9px] text-rose-500 bg-rose-500/10 px-1 rounded font-bold">عقب‌افتاده</span>' : ''}
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-200 mb-3 ${done ? 'line-through opacity-40' : ''}">${t.title}</h4>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center text-[9px] font-bold">${t.ai}</div>
+                                <span class="flex items-center gap-1 px-1.5 py-0.5 rounded ${pri.cls} text-[10px]">
+                                    <i class="fa-solid ${pri.icon} text-[10px]"></i>
+                                </span>
+                            </div>
+                            <div class="text-[10px] text-slate-500 flex items-center gap-1">
+                                <i class="fa-regular fa-calendar"></i> ${t.date}
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('')}
+                ${tasks.length === 0 ? '<div class="text-center text-slate-700 text-xs py-6">خالی</div>' : ''}
+            </div>`;
+        board.appendChild(el);
+    });
+}
+
+function tmDrag(ev, taskId) {
+    ev.stopPropagation();
+    _tmDragId = taskId;
+    ev.dataTransfer.setData('taskId', taskId);
+    ev.currentTarget?.classList.add('dragging');
+}
+
+function tmAllowDrop(ev) {
+    ev.preventDefault();
+    ev.currentTarget?.closest('.kanban-col')?.classList.add('drag-over');
+}
+
+function tmDragLeave(ev) {
+    if (!ev.currentTarget.contains(ev.relatedTarget)) {
+        ev.currentTarget?.closest('.kanban-col')?.classList.remove('drag-over');
+    }
+}
+
+function tmDrop(ev, newStatus) {
+    ev.preventDefault();
+    document.querySelectorAll('.kanban-col').forEach(c => c.classList.remove('drag-over'));
+    document.querySelectorAll('.kanban-card').forEach(c => c.classList.remove('dragging'));
+    const id = parseInt(ev.dataTransfer.getData('taskId'));
+    if (!isNaN(id)) tmChangeStatus(id, newStatus);
+}
+
+function tmChangeStatus(taskId, newStatus) {
+    const idx = _tmTasks.findIndex(t => t.id === taskId);
+    if (idx === -1) return;
+    if (newStatus === 'done') _tmTasks[idx].overdue = false;
+    _tmTasks[idx].status = newStatus;
+    _tmRenderList();
+    _tmRenderKanban();
+    if (_tmCurrentId === taskId) {
+        const sel = document.getElementById('tm-modal-status');
+        if (sel) sel.value = newStatus;
+    }
+}
+
+function tmQuickCreate(e) {
+    e.preventDefault();
+    const inp = document.getElementById('tm-quick-input');
+    const val = inp?.value.trim();
+    if (!val) return;
+    _tmTasks.unshift({
+        id: Date.now(), title: val, status: 'today', priority: 'normal',
+        date: 'امروز', overdue: false, category: 'عمومی',
+        assignee: 'علی رضایی', ai: 'ع‌ر', project: 'دشت‌زاد',
+    });
+    inp.value = '';
+    _tmRenderList();
+    _tmRenderKanban();
+}
+
+function tmFilterSet(filter) {
+    document.querySelectorAll('.tm-filter-btn').forEach(b => {
+        b.classList.remove('bg-brand-primary/10', 'text-brand-primary', 'border-brand-primary/20', 'font-bold');
+        b.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700', 'font-medium');
+    });
+    const act = document.getElementById('tmf-' + filter);
+    if (act) {
+        act.classList.add('bg-brand-primary/10', 'text-brand-primary', 'border-brand-primary/20', 'font-bold');
+        act.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700', 'font-medium');
+    }
+}
+
+function tmOpenModal(taskId) {
+    const task = taskId ? _tmTasks.find(t => t.id === taskId) : null;
+    _tmCurrentId = taskId;
+    if (task) {
+        document.getElementById('tm-modal-title').textContent      = task.title;
+        document.getElementById('tm-modal-status').value           = task.status;
+        document.getElementById('tm-modal-priority').value         = task.priority;
+        document.getElementById('tm-modal-date').textContent       = task.date;
+        document.getElementById('tm-modal-assignee').textContent   = task.assignee;
+        document.getElementById('tm-modal-assignee-initial').textContent = task.ai;
+        document.getElementById('tm-modal-project').textContent    = task.project;
+        document.getElementById('tm-modal-category').textContent   = task.category;
+        const pri = _TM_PRI[task.priority] || _TM_PRI.normal;
+        document.getElementById('tm-header-badges').innerHTML = `
+            <span class="px-2 py-0.5 bg-slate-800 text-slate-400 text-[10px] font-bold rounded border border-slate-700">${task.project}</span>
+            <span class="text-[10px] font-bold flex items-center gap-1 ${pri.cls} px-2 py-0.5 rounded">
+                <i class="fa-solid ${pri.icon} text-[10px]"></i> ${pri.label}
+            </span>`;
+    }
+    tmModalTab('chat');
+    const bd = document.getElementById('tm-modal-backdrop');
+    const md = document.getElementById('tm-modal');
+    if (!bd || !md) return;
+    bd.classList.replace('hidden-fade', 'visible-fade');
+    requestAnimationFrame(() => md.classList.remove('scale-95'));
+}
+
+function tmCloseModal() {
+    const bd = document.getElementById('tm-modal-backdrop');
+    const md = document.getElementById('tm-modal');
+    if (!bd || !md) return;
+    md.classList.add('scale-95');
+    bd.classList.replace('visible-fade', 'hidden-fade');
+    _tmCurrentId = null;
+}
+
+function tmSaveModal() {
+    if (!_tmCurrentId) { tmCloseModal(); return; }
+    const idx = _tmTasks.findIndex(t => t.id === _tmCurrentId);
+    if (idx !== -1) {
+        const s = document.getElementById('tm-modal-status')?.value;
+        const p = document.getElementById('tm-modal-priority')?.value;
+        if (s) _tmTasks[idx].status   = s;
+        if (p) _tmTasks[idx].priority = p;
+        _tmRenderList();
+        _tmRenderKanban();
+    }
+    tmCloseModal();
+}
+
+function tmModalTab(tab) {
+    ['chat', 'log', 'ai'].forEach(t => {
+        const c = document.getElementById('tm-tcontent-' + t);
+        const b = document.getElementById('tm-tab-' + t);
+        if (c) { c.classList.add('hidden'); c.classList.remove('flex'); }
+        if (b && t !== 'ai') {
+            b.classList.remove('text-brand-primary', 'border-brand-primary');
+            b.classList.add('text-slate-400', 'border-transparent');
+        }
+    });
+    const ac = document.getElementById('tm-tcontent-' + tab);
+    const ab = document.getElementById('tm-tab-' + tab);
+    if (ac) { ac.classList.remove('hidden'); ac.classList.add('flex'); }
+    if (ab && tab !== 'ai') {
+        ab.classList.add('text-brand-primary', 'border-brand-primary');
+        ab.classList.remove('text-slate-400', 'border-transparent');
+    }
+}
+
+function tmAISubmit() {
+    const inp = document.getElementById('tm-ai-input');
+    if (!inp) return;
+    const val = inp.value.trim();
+    if (!val) return;
+    const chat = document.getElementById('tm-ai-messages');
+    if (!chat) return;
+    chat.innerHTML += `
+        <div class="flex gap-3 flex-row-reverse mt-3">
+            <div class="w-8 h-8 rounded-xl bg-slate-700 flex items-center justify-center text-white shrink-0 text-[10px] font-bold">شما</div>
+            <div class="bg-brand-primary text-white p-3 rounded-xl rounded-tl-sm text-sm max-w-[85%] leading-relaxed">${val}</div>
+        </div>`;
+    const loadId = 'tml-' + Date.now();
+    chat.innerHTML += `
+        <div id="${loadId}" class="flex gap-3 mt-3">
+            <div class="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
+            <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl rounded-tr-sm flex items-center gap-1">
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:0s"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:.15s"></span>
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay:.3s"></span>
+            </div>
+        </div>`;
+    chat.scrollTop = chat.scrollHeight;
+    inp.value = '';
+    setTimeout(() => {
+        document.getElementById(loadId)?.remove();
+        chat.innerHTML += `
+            <div class="flex gap-3 mt-3">
+                <div class="w-8 h-8 rounded-xl bg-brand-primary flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-robot text-sm"></i></div>
+                <div class="bg-slate-800 border border-slate-700 p-3 rounded-xl rounded-tr-sm text-sm text-slate-200 max-w-[85%] leading-relaxed">
+                    در حال حاضر این یک شبیه‌ساز است. در نسخه نهایی به API متصل خواهد شد.
+                </div>
+            </div>`;
+        chat.scrollTop = chat.scrollHeight;
+    }, 1000);
+}
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
@@ -1054,6 +1379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
     updateHeaderDateTime();
     setInterval(updateHeaderDateTime, 60000);
+    _updateThemeIcon();
 
     // Determine which tab to show (from URL ?tab= param or default)
     const urlTab  = new URLSearchParams(window.location.search).get('tab');
@@ -1065,6 +1391,8 @@ document.addEventListener('DOMContentLoaded', () => {
         switchTab(startTab);
         history.replaceState({ tab: startTab }, '', '/?tab=' + startTab);
         renderConnectionCards();
+        _tmRenderList();
+        _tmRenderKanban();
     }
 
     initQuickCreate();
@@ -1102,3 +1430,16 @@ window.closeEditModal       = closeEditModal;
 window.switchModalTab       = switchModalTab;
 window.openTaskModal        = openTaskModal;
 window.closeTaskModal       = closeTaskModal;
+window.toggleTheme          = toggleTheme;
+window.tmOpenModal          = tmOpenModal;
+window.tmCloseModal         = tmCloseModal;
+window.tmSaveModal          = tmSaveModal;
+window.tmModalTab           = tmModalTab;
+window.tmQuickCreate        = tmQuickCreate;
+window.tmChangeStatus       = tmChangeStatus;
+window.tmFilterSet          = tmFilterSet;
+window.tmDrag               = tmDrag;
+window.tmAllowDrop          = tmAllowDrop;
+window.tmDragLeave          = tmDragLeave;
+window.tmDrop               = tmDrop;
+window.tmAISubmit           = tmAISubmit;

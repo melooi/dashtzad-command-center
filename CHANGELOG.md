@@ -8,6 +8,30 @@
 
 ---
 
+## [v0.2.2] - 1405/03/21
+
+### Added
+- سیستم احراز هویت پنل: ورود با شماره موبایل + کد OTP پنج‌رقمی
+- جریان ورود: شماره → OTP → تکمیل پروفایل → انتظار تأیید → داشبورد
+- وضعیت‌های کاربر: `pending_profile` / `pending_approval` / `approved` / `rejected` / `blocked`
+- لاگ ورودها با ذخیره IP، User-Agent، وضعیت و تعداد تلاش‌های ناموفق
+- Bootstrap ادمین: با تنظیم `PANEL_ADMIN_PHONE` در `.env`، اولین ورود `super_admin` می‌شود
+- مدیریت کاربران در تنظیمات: تأیید، رد، مسدودسازی، تغییر نقش
+- نقش‌های کاربری: `super_admin`، `project_manager`، `product_specialist`، `content_specialist`، `seo_specialist`، `sales_specialist`، `viewer`
+- `SmsService`: در local کد OTP در UI نمایش داده می‌شود؛ در production از MSGway استفاده می‌شود
+- محدودیت ۳ تلاش برای هر OTP، تایمر ارسال مجدد ۲ دقیقه‌ای، rate limit سه درخواست در ۱۰ دقیقه
+
+### Changed
+- تاریخ هدر: فرمت `چهارشنبه ۲۱ خرداد | ۱۵:۴۲` با جداسازی هر بخش
+- PJAX: پاسخ ۴۰۱ به صفحه ورود ریدایرکت می‌کند
+- تم برند: نوار PJAX، `sheet-input:focus` و `card-title:hover` به `brand-primary/secondary` تبدیل شدند
+
+### Fixed
+- نمایش `—` به‌جای تاریخ واقعی در هدر در برخی مرورگرها
+- `PanelAuth`: اگر جدول `app_settings` هنوز وجود نداشت، سرور crash نمی‌کرد
+
+---
+
 ## [v0.2.1] - 1405/03/21
 
 ### Added

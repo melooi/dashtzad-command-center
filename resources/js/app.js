@@ -175,7 +175,7 @@ const connectionServices = [
     { id: 'WordPress', group: 'site', name: 'WordPress', desc: 'اتصال به سایت محتوایی برای انتشار خودکار', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-brands fa-wordpress text-xl"></i>` },
     { id: 'WooCommerce', group: 'site', name: 'WooCommerce', desc: 'همگام‌سازی محصولات، قیمت‌ها و سفارشات', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-brands fa-woocommerce text-xl"></i>` },
     // SMS
-    { id: 'MSGway', group: 'sms', name: 'MSGway', desc: 'مسیریابی هوشمند پیامک، تماس صوتی و پیام‌رسان‌ها', connected: false, summaryLabel: 'Provider', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-comment-sms text-xl"></i>` },
+    { id: 'MSGway', group: 'sms', name: 'MSGway', desc: 'مسیر اصلی پیامک‌های ورود، اطلاع‌رسانی و پیام‌رسانی سیستم', connected: false, summaryLabel: 'Template', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-comment-sms text-xl"></i>` },
     // Google
     { id: 'GoogleCustomSearch', group: 'google', name: 'Custom Search', desc: 'API جستجوی سفارشی وب', connected: false, summaryLabel: 'CX', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-magnifying-glass text-xl"></i>` },
     { id: 'GoogleSearchConsole', group: 'google', name: 'Search Console', desc: 'مدیریت ایندکس و خطاهای سایت', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-magnifying-glass-chart text-xl"></i>` },
@@ -290,6 +290,58 @@ function removeConnState(id) {
     localStorage.setItem(CONN_STORAGE_KEY, JSON.stringify(all));
 }
 
+// ─── MSGway — server-backed state ────────────────────────────────────────────
+
+let _msgwayServerState = null; // { connected, template_id, last_test, last_error }
+
+async function _loadMsgwayStatus() {
+    try {
+        const res  = await fetch('/connections/msgway/status', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        if (res.status === 401) return;
+        if (!res.ok) return;
+        _msgwayServerState = await res.json();
+        if (_msgwayServerState.connected) {
+            saveConnState('MSGway', {
+                connected:    true,
+                summaryLabel: 'Template',
+                summaryValue: _msgwayServerState.template_id || 'ذخیره شده',
+                updatedAt:    _msgwayServerState.last_test || '',
+            });
+        } else {
+            removeConnState('MSGway');
+        }
+    } catch { /* network error — ignore */ }
+}
+
+async function _msgwayTestSms() {
+    const phone = prompt('شماره موبایل برای تست ارسال پیامک (مثال: 09120857856):');
+    if (!phone) return;
+
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+    const btn  = document.getElementById('msgway-test-btn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i> در حال ارسال...'; }
+
+    try {
+        const res  = await fetch('/connections/msgway/test-sms', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+            body:    JSON.stringify({ phone }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+            alert('✓ پیامک تست ارسال شد.');
+        } else {
+            alert('✗ ' + (data.message || 'خطا در ارسال پیامک'));
+        }
+    } catch {
+        alert('خطا در ارتباط با سرور');
+    } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> تست پیامک'; }
+    }
+}
+
 // ─── Connections — Card Renderer ─────────────────────────────────────────────
 
 let _currentModalSrvId = null;
@@ -394,6 +446,32 @@ function openConfigModal(serviceId) {
         container.innerHTML += `<div>${html}</div>`;
     });
 
+    // MSGway: inject test-SMS button + status banner into footer
+    const footer = document.querySelector('#config-modal .p-5.border-t');
+    const oldTestBtn = document.getElementById('msgway-test-btn');
+    if (oldTestBtn) oldTestBtn.remove();
+    const oldBanner = document.getElementById('msgway-status-banner');
+    if (oldBanner) oldBanner.remove();
+
+    if (serviceId === 'MSGway') {
+        const testBtn = document.createElement('button');
+        testBtn.id        = 'msgway-test-btn';
+        testBtn.type      = 'button';
+        testBtn.onclick   = _msgwayTestSms;
+        testBtn.className = 'flex-1 py-2.5 text-sm font-bold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 rounded-xl transition-colors flex items-center justify-center gap-1.5';
+        testBtn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i> تست پیامک';
+        if (footer) footer.insertBefore(testBtn, footer.firstChild);
+
+        if (_msgwayServerState?.last_error) {
+            const banner = document.createElement('div');
+            banner.id        = 'msgway-status-banner';
+            banner.className = 'mx-6 mb-3 flex items-start gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-xl px-4 py-2.5';
+            banner.innerHTML = `<i class="fa-solid fa-circle-exclamation shrink-0 mt-0.5"></i><span>آخرین خطا: ${_msgwayServerState.last_error}</span>`;
+            const fieldsDiv = document.getElementById('modal-fields-container');
+            if (fieldsDiv) fieldsDiv.parentNode.insertBefore(banner, fieldsDiv.nextSibling);
+        }
+    }
+
     const backdrop = document.getElementById('config-modal-backdrop');
     const modal    = document.getElementById('config-modal');
     backdrop.classList.replace('hidden-fade', 'visible-fade');
@@ -425,6 +503,47 @@ async function saveConnectionsModal() {
 
     const btn = document.getElementById('modal-save-btn');
     if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> در حال بررسی...'; }
+
+    // MSGway uses dedicated backend save (not generic test)
+    if (_currentModalSrvId === 'MSGway') {
+        try {
+            const apiKeyEl     = allFieldEls.find(el => el.dataset.fieldName === 'api_key');
+            const templateIdEl = allFieldEls.find(el => el.dataset.fieldName === 'otp_template_id');
+            const csrf         = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+            const res  = await fetch('/connections/msgway/save', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                body:    JSON.stringify({
+                    api_key:     apiKeyEl?.value.trim() ?? '',
+                    template_id: templateIdEl?.value.trim() ?? '',
+                }),
+            });
+            const data = await res.json();
+
+            if (!data.ok) {
+                _connShowError(data.message || 'ذخیره ناموفق بود');
+                if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
+                return;
+            }
+
+            _msgwayServerState = { ..._msgwayServerState, connected: true, template_id: data.template_id || '' };
+            saveConnState('MSGway', {
+                connected:    true,
+                summaryLabel: 'Template',
+                summaryValue: data.template_id || 'ذخیره شده',
+                updatedAt:    new Date().toISOString(),
+            });
+            allFieldEls.forEach(el => { if (['secret','textarea_secret'].includes(el.dataset.fieldType)) el.value = ''; });
+            renderConnectionCards();
+            if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
+            closeModal('config-modal');
+        } catch (_) {
+            _connShowError('خطا در ارتباط با سرور');
+            if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
+        }
+        return;
+    }
 
     try {
         const res  = await fetch('/connections/test', {
@@ -484,6 +603,14 @@ function _connHideError() {
 
 function disconnectService(id, event = null) {
     if (event) event.stopPropagation();
+    if (id === 'MSGway') {
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+        fetch('/connections/msgway/disconnect', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf },
+        }).catch(() => {});
+        _msgwayServerState = null;
+    }
     removeConnState(id);
     renderConnectionCards();
 }
@@ -1398,6 +1525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (hasSPA) {
         switchTab(startTab);
         history.replaceState({ tab: startTab }, '', '/?tab=' + startTab);
+        _loadMsgwayStatus().then(() => renderConnectionCards());
         renderConnectionCards();
         _tmRenderList();
         _tmRenderKanban();
@@ -1439,6 +1567,7 @@ window.switchModalTab       = switchModalTab;
 window.openTaskModal        = openTaskModal;
 window.closeTaskModal       = closeTaskModal;
 window.toggleTheme          = toggleTheme;
+window._msgwayTestSms       = _msgwayTestSms;
 window.tmOpenModal          = tmOpenModal;
 window.tmCloseModal         = tmCloseModal;
 window.tmSaveModal          = tmSaveModal;

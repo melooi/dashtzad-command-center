@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\ConnectionsMsgwayController;
 use Illuminate\Support\Facades\Log;
 
 class SmsService
@@ -19,34 +19,26 @@ class SmsService
 
     private static function sendViaMsgway(string $phone, string $code): bool
     {
-        $apiKey    = config('services.msgway.api_key');
-        $sender    = config('services.msgway.sender', '3000xxx');
-        $template  = config('services.msgway.otp_template', 'کد ورود به پنل دشت‌زاد: %s');
-        $message   = sprintf($template, $code);
+        $apiKey     = ConnectionsMsgwayController::resolveApiKey();
+        $templateId = ConnectionsMsgwayController::resolveTemplateId();
 
         if (empty($apiKey)) {
-            Log::error('[SMS] MSGway API key not configured');
+            Log::error('[SMS] MSGway API key not configured — OTP not sent');
             return false;
         }
 
-        try {
-            $res = Http::timeout(10)->post('https://api.msgway.com/sms/send', [
-                'api_key' => $apiKey,
-                'sender'  => $sender,
-                'receptor'=> $phone,
-                'message' => $message,
-            ]);
-
-            if ($res->successful() && ($res->json('status') === 'success' || $res->json('status') === 200)) {
-                return true;
-            }
-
-            Log::warning('[SMS] MSGway error', ['phone' => $phone, 'response' => $res->body()]);
-            return false;
-
-        } catch (\Throwable $e) {
-            Log::error('[SMS] MSGway exception: ' . $e->getMessage(), ['phone' => $phone]);
+        if (empty($templateId)) {
+            Log::error('[SMS] MSGway template ID not configured — OTP not sent');
             return false;
         }
+
+        $result = ConnectionsMsgwayController::callMsgway($apiKey, $templateId, $phone, [$code]);
+
+        if ($result['ok']) {
+            return true;
+        }
+
+        Log::warning('[SMS] MSGway send failed', ['phone' => $phone, 'message' => $result['message']]);
+        return false;
     }
 }

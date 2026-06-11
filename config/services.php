@@ -35,10 +35,9 @@ return [
         ],
     ],
 
-    'msgway' => [
-        'api_key'      => env('MSGWAY_API_KEY'),
-        'sender'       => env('MSGWAY_SENDER', '3000xxx'),
-        'otp_template' => env('MSGWAY_OTP_TEMPLATE', 'کد ورود به پنل دشت‌زاد: %s'),
+    'messageway' => [
+        'api_key'         => env('MESSAGE_WAY_APIKEY', env('MSGWAY_API_KEY')),
+        'sms_template_id' => env('MESSAGE_WAY_SMS_TEMPLATE_ID'),
     ],
 
 ];

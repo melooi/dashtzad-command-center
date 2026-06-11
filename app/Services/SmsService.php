@@ -32,7 +32,7 @@ class SmsService
             return false;
         }
 
-        $result = ConnectionsMsgwayController::callMsgway($apiKey, $templateId, $phone, [$code]);
+        $result = ConnectionsMsgwayController::callMsgway($apiKey, $templateId, $phone, $code);
 
         if ($result['ok']) {
             return true;

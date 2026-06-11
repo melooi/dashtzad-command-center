@@ -72,8 +72,9 @@ class ConnectionsMsgwayController extends Controller
             return response()->json(['ok' => false, 'message' => 'API Key تنظیم نشده است. ابتدا اتصال را ذخیره کنید.']);
         }
 
-        $testCode = str_pad(random_int(10000, 99999), 5, '0', STR_PAD_LEFT);
-        $result   = $this->callMsgway($apiKey, $templateId, $phone, [$testCode]);
+        $length   = (int) config('panel.otp_length', 4);
+        $testCode = (string) random_int(10 ** ($length - 1), (10 ** $length) - 1);
+        $result   = $this->callMsgway($apiKey, $templateId, $phone, $testCode);
 
         if ($result['ok']) {
             AppSetting::set('msgway_last_test', now()->toISOString());
@@ -96,6 +97,22 @@ class ConnectionsMsgwayController extends Controller
 
     // ── Shared helpers ───────────────────────────────────────────────────────
 
+    private static function normalizePhoneForMsgway(string $phone): string
+    {
+        $phone = preg_replace('/\D+/', '', $phone);
+
+        if (str_starts_with($phone, '09')) {
+            return '+98' . substr($phone, 1);
+        }
+        if (str_starts_with($phone, '989')) {
+            return '+' . $phone;
+        }
+        if (str_starts_with($phone, '9')) {
+            return '+98' . $phone;
+        }
+        return '+' . $phone;
+    }
+
     public static function resolveApiKey(): string
     {
         try {
@@ -113,9 +130,9 @@ class ConnectionsMsgwayController extends Controller
         return (string) env('MESSAGE_WAY_SMS_TEMPLATE_ID', '');
     }
 
-    public static function callMsgway(string $apiKey, string $templateId, string $phone, array $params): array
+    public static function callMsgway(string $apiKey, string $templateId, string $phone, string $code): array
     {
-        $mobile = '+98' . substr($phone, 1);
+        $mobile = self::normalizePhoneForMsgway($phone);
 
         try {
             $res  = Http::timeout(12)->withHeaders([
@@ -123,11 +140,10 @@ class ConnectionsMsgwayController extends Controller
                 'accept-language' => 'fa',
                 'Content-Type'    => 'application/json',
             ])->post('https://api.msgway.com/send', [
-                'method'     => 'sms',
                 'mobile'     => $mobile,
+                'method'     => 'sms',
                 'templateID' => (int) $templateId,
-                'provider'   => 1,
-                'params'     => $params,
+                'code'       => $code,
             ]);
 
             $body = $res->json() ?? [];

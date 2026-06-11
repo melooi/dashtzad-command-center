@@ -22,5 +22,11 @@
     {{-- Activity Drawer --}}
     <x-activity-drawer />
 
+    {{-- Mobile sidebar overlay --}}
+    <div id="sidebar-overlay"
+         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden-fade md:hidden"
+         onclick="closeMobileSidebar()">
+    </div>
+
 </body>
 </html>

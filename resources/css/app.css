@@ -87,3 +87,38 @@
 /* Utility */
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Sidebar: desktop collapse + mobile drawer ──────────────────────────── */
+#sidebar {
+    flex-shrink: 0;
+    min-width: 0;
+    overflow: hidden;
+    transition: width 0.25s ease;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    #sidebar { width: 16rem; }
+    #sidebar.sb-collapsed { width: 5rem; }
+    #sidebar.sb-collapsed .sb-text { display: none; }
+    #sidebar.sb-collapsed .sb-logo-area { justify-content: center; }
+    #sidebar.sb-collapsed .sb-nav-btn { justify-content: center; }
+    #sidebar.sb-collapsed .sb-group-summary { justify-content: center; }
+    #sidebar.sb-collapsed .sb-chevron { display: none; }
+    #sidebar.sb-collapsed .sb-subitems { display: none !important; }
+    #sidebar.sb-collapsed .sb-toggle-btn { justify-content: center; }
+}
+
+/* Mobile: fixed drawer from right */
+@media (max-width: 767px) {
+    #sidebar {
+        position: fixed;
+        top: 0; right: 0; bottom: 0;
+        width: min(18rem, 85vw);
+        transform: translateX(110%);
+        transition: transform 0.3s ease;
+        z-index: 60;
+    }
+    #sidebar.sb-mobile-open { transform: translateX(0); }
+}
+

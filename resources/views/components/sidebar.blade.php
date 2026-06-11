@@ -1,28 +1,39 @@
 {{-- Sidebar navigation --}}
-<aside class="w-16 md:w-64 bg-slate-900 border-l border-slate-800/80
-              flex flex-col transition-all z-20 shrink-0">
+<aside id="sidebar" class="bg-slate-900 border-l border-slate-800/80 flex flex-col z-20">
 
-    {{-- Logo --}}
-    <div class="h-16 flex items-center justify-center md:justify-start md:px-6
-                border-b border-slate-800/80 shrink-0">
-        <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center
-                    shadow-lg shadow-indigo-900/30 shrink-0">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"/>
+    {{-- Logo + toggle buttons --}}
+    <div class="sb-logo-area h-16 flex items-center justify-between shrink-0 px-4 border-b border-slate-800/80">
+
+        <div class="flex items-center gap-3 min-w-0">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center
+                        shadow-lg shadow-indigo-900/30 shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            <div class="sb-text min-w-0">
+                <span class="font-bold text-white text-base tracking-wide">دشت‌زاد</span>
+                <span class="text-xs font-normal text-indigo-400 mr-1">پنل</span>
+            </div>
+        </div>
+
+        {{-- Mobile: close button --}}
+        <button onclick="closeMobileSidebar()"
+                class="md:hidden p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0"
+                title="بستن">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
-        </div>
-        <div class="mr-3 hidden md:block">
-            <span class="font-bold text-white text-base tracking-wide">دشت‌زاد</span>
-            <span class="text-xs font-normal text-indigo-400 mr-1">پنل</span>
-        </div>
+        </button>
+
     </div>
 
     {{-- Nav --}}
     <nav class="flex-1 py-4 px-2.5 space-y-0.5 overflow-y-auto hide-scrollbar">
 
         {{-- داشبورد --}}
-        <x-nav.item tab="dashboard">
+        <x-nav.item tab="dashboard" title="داشبورد">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
                       d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5
@@ -30,7 +41,7 @@
                          1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621
                          0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
             </svg>
-            <span class="mr-3 font-medium hidden md:block text-sm">داشبورد</span>
+            <span class="mr-3 font-medium sb-text text-sm">داشبورد</span>
         </x-nav.item>
 
         {{-- مدیریت وظایف --}}
@@ -53,7 +64,7 @@
         </x-nav.group>
 
         {{-- محصولات --}}
-        <x-nav.group title="محصولات">
+        <x-nav.group title="محصولات" :open="request()->is('products/*')">
             <x-slot:icon>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
@@ -62,7 +73,12 @@
                 </svg>
             </x-slot:icon>
             <x-nav.subitem tab="products-list">همه محصولات</x-nav.subitem>
-            <x-nav.subitem tab="products-create">افزودن محصول</x-nav.subitem>
+            <button
+                onclick="window.location='/products/quick-create'"
+                class="nav-btn w-full text-right flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-colors
+                       {{ request()->is('products/quick-create') ? 'text-indigo-400 bg-indigo-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/50' }}">
+                افزودن سریع (شیت)
+            </button>
             <x-nav.subitem tab="products-incomplete">محصولات ناقص</x-nav.subitem>
             <x-nav.subitem tab="products-review">صف بررسی</x-nav.subitem>
             <x-nav.subitem tab="products-ready">آماده انتشار</x-nav.subitem>
@@ -171,8 +187,23 @@
             <x-nav.subitem tab="activity-errors">خطاهای سیستم</x-nav.subitem>
         </x-nav.group>
 
+        {{-- گزارش آپدیت‌ها --}}
+        <x-nav.item
+            onclick="window.location='/changelog'"
+            title="گزارش آپدیت‌ها"
+            class="{{ request()->is('changelog') ? 'bg-indigo-600/10 !text-indigo-400' : '' }}">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
+                      d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987
+                         8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1
+                         6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967
+                         8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+            </svg>
+            <span class="mr-3 font-medium sb-text text-sm">گزارش آپدیت‌ها</span>
+        </x-nav.item>
+
         {{-- گزارش‌ها --}}
-        <x-nav.item tab="reports">
+        <x-nav.item tab="reports" title="گزارش‌ها و آمار">
             <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
                       d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504
@@ -184,7 +215,7 @@
                          4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0
                          1-1.125-1.125V4.125Z"/>
             </svg>
-            <span class="mr-3 font-medium hidden md:block text-sm">گزارش‌ها و آمار</span>
+            <span class="mr-3 font-medium sb-text text-sm">گزارش‌ها و آمار</span>
         </x-nav.item>
 
         {{-- تنظیمات --}}
@@ -216,4 +247,20 @@
         </x-nav.group>
 
     </nav>
+
+    {{-- Desktop collapse toggle (bottom, desktop only) --}}
+    <div class="hidden md:block border-t border-slate-800/60 p-2">
+        <button onclick="toggleSidebar()"
+                id="sb-toggle-btn"
+                class="sb-toggle-btn w-full flex items-center gap-3 px-3 py-2 rounded-xl
+                       text-slate-500 hover:text-slate-300 hover:bg-slate-800/60 transition-colors"
+                title="جمع کردن منو">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+            <span class="sb-text text-sm font-medium">جمع کردن</span>
+        </button>
+    </div>
+
 </aside>

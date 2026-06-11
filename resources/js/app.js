@@ -1,3 +1,61 @@
+// ─── Sidebar ─────────────────────────────────────────────────────────────────
+
+const SIDEBAR_KEY = 'dashtzad_sidebar_v1';
+
+function initSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+
+    // Restore desktop collapsed state
+    if (window.innerWidth >= 768 && localStorage.getItem(SIDEBAR_KEY) === '1') {
+        sidebar.classList.add('sb-collapsed');
+        const btn = document.getElementById('sb-toggle-btn');
+        if (btn) btn.title = 'باز کردن منو';
+    }
+
+    // ESC closes mobile drawer
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeMobileSidebar();
+    });
+
+    // Clean up mobile state when resizing to desktop
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) closeMobileSidebar();
+    });
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    sidebar.classList.toggle('sb-collapsed');
+    const isCollapsed = sidebar.classList.contains('sb-collapsed');
+    // Close open groups to avoid visual glitch on re-expand
+    if (isCollapsed) {
+        sidebar.querySelectorAll('details[open]').forEach(d => d.removeAttribute('open'));
+    }
+    const btn = document.getElementById('sb-toggle-btn');
+    if (btn) btn.title = isCollapsed ? 'باز کردن منو' : 'جمع کردن منو';
+    localStorage.setItem(SIDEBAR_KEY, isCollapsed ? '1' : '0');
+}
+
+function openMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar || !overlay) return;
+    sidebar.classList.add('sb-mobile-open');
+    overlay.classList.replace('hidden-fade', 'visible-fade');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar || !overlay) return;
+    sidebar.classList.remove('sb-mobile-open');
+    overlay.classList.replace('visible-fade', 'hidden-fade');
+    document.body.style.overflow = '';
+}
+
 // ─── Tab / Page Switching ────────────────────────────────────────────────────
 
 const PAGE_IDS = [
@@ -68,6 +126,8 @@ function switchTab(tabId) {
 
     const titleEl = document.getElementById('header-title');
     if (titleEl) titleEl.textContent = PAGE_TITLES[tabId] ?? 'دشت‌زاد';
+
+    closeMobileSidebar();
 }
 
 // ─── Activity Drawer ─────────────────────────────────────────────────────────

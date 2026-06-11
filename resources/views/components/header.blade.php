@@ -2,8 +2,16 @@
 <header class="bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 h-16
                px-4 md:px-8 flex items-center justify-between shrink-0 z-30 relative">
 
-    {{-- Left: Page title --}}
-    <div class="flex items-center gap-4">
+    {{-- Left: Hamburger (mobile) + Page title --}}
+    <div class="flex items-center gap-3">
+        {{-- Hamburger — mobile only --}}
+        <button onclick="openMobileSidebar()"
+                class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"
+                title="باز کردن منو">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
         <h1 id="header-title"
             class="text-base font-bold text-white hidden sm:block tracking-tight">
             مدیریت کارها

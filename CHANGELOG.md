@@ -8,6 +8,26 @@
 
 ---
 
+## [v0.2.1] - 1405/03/21
+
+### Added
+- تسک‌منیجر: لیست وظایف با متریک‌های ۵گانه، فیلتر، و quick-add
+- تسک‌منیجر: کانبان بورد ۶ستونه با drag-drop کامل
+- تسک‌منیجر: مودال جزئیات ۳ستونه (متا / محتوا / چت+لاگ+AI)
+- دستیار AI در مودال تسک با شبیه‌ساز streaming
+- سیستم رنگ برند: توکن‌های `brand-primary` (#315A3A) تا `brand-neutral` در Tailwind v4 `@theme`
+- دارک‌مود/لایت‌مود با `@custom-variant dark` — ذخیره در localStorage، بدون flash
+- دکمه تغییر تم (آفتاب/ماه) در هدر
+
+### Changed
+- لوگو Sidebar: از `bg-indigo-600` به `bg-brand-primary`
+- حالت active ناوبری: از indigo به `brand-primary`
+- آواتار کاربر هدر: از indigo به brand-primary
+- nav item/subitem/group: hover رنگ به `text-slate-200` (در هر دو تم)
+- Kanban drag-over رنگ: از indigo به brand-primary
+
+---
+
 ## [v0.2.0] - 1405/03/21
 
 ### Added

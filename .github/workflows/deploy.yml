@@ -30,4 +30,4 @@ jobs:
               -p "$PORT" \
               -o BatchMode=yes \
               "$SSH_USER@$SSH_HOST" \
-              "bash ${APP_PATH}/scripts/deploy.sh"
+              "cd ${APP_PATH} && git fetch origin main && git reset --hard origin/main && rm -f package-lock.json && bash scripts/deploy.sh"

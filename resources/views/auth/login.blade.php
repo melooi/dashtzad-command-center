@@ -12,34 +12,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 
-{{-- Desktop: fixed backdrop + centered card  |  Mobile: bottom-sheet --}}
-<body class="bg-slate-950 text-slate-300 antialiased selection:bg-brand-primary/20">
-
-    {{-- Backdrop (always visible) --}}
-    <div class="fixed inset-0 bg-slate-950 sm:bg-slate-950/95 sm:backdrop-blur-sm z-0"
-         aria-hidden="true"></div>
-
-    {{-- Wrapper: bottom-sheet on mobile, full-centered on desktop --}}
-    <div class="fixed inset-0 z-10 flex flex-col sm:items-center sm:justify-center overflow-y-auto">
-
-        {{-- Push card to bottom on mobile --}}
-        <div class="flex-1 sm:hidden pointer-events-none" aria-hidden="true"></div>
+{{-- Centered card on all sizes --}}
+<body class="bg-slate-950 text-slate-300 antialiased selection:bg-brand-primary/20 min-h-screen flex items-center justify-center p-4">
 
         {{-- Card --}}
-        <div class="relative w-full sm:max-w-sm
+        <div class="relative w-full max-w-sm
                     bg-slate-900
-                    border-t sm:border border-slate-800/80
-                    rounded-t-3xl sm:rounded-2xl
-                    shadow-2xl shadow-black/50
-                    sm:my-8">
-
-            {{-- Mobile drag handle --}}
-            <div class="sm:hidden flex justify-center pt-3 pb-0 shrink-0">
-                <div class="w-9 h-1 rounded-full bg-slate-700/80"></div>
-            </div>
+                    border border-slate-800/80
+                    rounded-2xl
+                    shadow-2xl shadow-black/60">
 
             {{-- View container --}}
-            <div id="view-container" class="px-6 pt-6 pb-8 sm:p-8 overflow-y-auto">
+            <div id="view-container" class="p-6 sm:p-8 overflow-y-auto">
 
                 {{-- ── VIEW: شماره موبایل ─────────────────────────────── --}}
                 <div id="view-phone" class="flex flex-col items-center">
@@ -240,10 +224,6 @@
 
             </div>
         </div>
-
-        {{-- Bottom spacer on desktop so card doesn't touch edge --}}
-        <div class="hidden sm:block h-8 shrink-0"></div>
-    </div>
 
 <style>
 .otp-box {

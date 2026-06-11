@@ -8,6 +8,22 @@
 
 ---
 
+## [v0.2.4] - 1405/03/21
+
+### Added
+- طول OTP قابل تنظیم از طریق `PANEL_OTP_LENGTH` در `.env` (پیش‌فرض ۴ رقم)
+- `config/panel.php`: تنظیمات مرکزی پنل (`otp_length`، `admin_phone`)
+- Auto-submit OTP: به محض پر شدن همه باکس‌ها، verify خودکار انجام می‌شود
+
+### Fixed
+- MSGway: کد OTP تولیدشده توسط Laravel در فیلد `code` ارسال می‌شود (نه `params`) — جلوگیری از تولید کد توسط MSGway
+- Admin bootstrap: اگر کاربر ادمین با وضعیت `pending_approval` در DB بود، در `verifyOtp` خودکار `super_admin` می‌شود
+- `PANEL_ADMIN_PHONE` از `config('panel.admin_phone')` خوانده می‌شود (نه `env()` مستقیم) — رفع باگ با config cache
+- Layout ورود: کارت در همه سایزها وسط‌چین شد (حذف bottom-sheet موبایل)
+- فرم پروفایل: فیلدهای «دلیل دسترسی» و «معرف» حذف شدند
+
+---
+
 ## [v0.2.2] - 1405/03/21
 
 ### Added

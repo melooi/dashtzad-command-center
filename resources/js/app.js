@@ -1040,14 +1040,14 @@ function updateHeaderDateTime() {
     if (!el) return;
     const now  = new Date();
     const date = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        weekday: 'long', month: 'long', day: 'numeric',
         timeZone: 'Asia/Tehran',
     }).format(now);
     const time = new Intl.DateTimeFormat('fa-IR', {
         hour: '2-digit', minute: '2-digit', hour12: false,
         timeZone: 'Asia/Tehran',
     }).format(now);
-    el.textContent = `امروز: ${date} — ${time}`;
+    el.textContent = `${date} | ${time}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

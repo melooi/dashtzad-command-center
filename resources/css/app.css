@@ -122,3 +122,31 @@
     #sidebar.sb-mobile-open { transform: translateX(0); }
 }
 
+/* ── Products Quick-Create spreadsheet ──────────────────────────────────── */
+.sheet-input {
+    width: 100%; height: 100%;
+    background-color: transparent;
+    padding: 0.625rem 0.875rem;
+    color: #e2e8f0;
+    outline: none;
+    border: none;
+    transition: background-color 0.15s ease;
+}
+.sheet-input:focus {
+    background-color: #1e293b;
+    box-shadow: inset 0 0 0 2px #6366f1;
+    z-index: 10;
+    position: relative;
+}
+.sheet-input.invalid-field {
+    background-color: rgba(244, 63, 94, 0.08) !important;
+    color: #f43f5e !important;
+    font-weight: 700;
+}
+.sheet-input.invalid-field:focus { box-shadow: inset 0 0 0 2px #f43f5e !important; }
+input[type=number].sheet-input::-webkit-inner-spin-button,
+input[type=number].sheet-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number].sheet-input { -moz-appearance: textfield; }
+
+@keyframes pulse-save { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.saving-indicator { animation: pulse-save 1.5s ease-in-out infinite; }

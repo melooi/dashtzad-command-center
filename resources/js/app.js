@@ -474,21 +474,469 @@ function generateContent(e) {
     }, 1800);
 }
 
+// ─── Products Quick Create ───────────────────────────────────────────────────
+
+let qcRowCount = 0;
+const qcRowLastEdits = {};
+
+const qcCategories = ['برنج', 'حبوبات', 'ادویه', 'خشکبار', 'نوشیدنی‌ها', 'مواد غذایی آماده'];
+
+const qcStatuses = [
+    { id: 'draft',        label: 'پیش‌نویس',     color: 'text-slate-400' },
+    { id: 'incomplete',   label: 'ناقص',           color: 'text-rose-400' },
+    { id: 'review',       label: 'نیاز به بررسی', color: 'text-indigo-400' },
+    { id: 'approved',     label: 'تأیید شده',      color: 'text-blue-400' },
+    { id: 'ready',        label: 'آماده انتشار',   color: 'text-emerald-400' },
+    { id: 'published',    label: 'منتشر شده',      color: 'text-emerald-500' },
+    { id: 'out_of_stock', label: 'ناموجود',        color: 'text-slate-500' },
+    { id: 'archived',     label: 'آرشیو شده',      color: 'text-slate-600' },
+];
+
+// .sheet-input indices within each row <tr>
+// 0:title 1:url 2:sku 3:category(select) 4:weight 5:regPrice 6:salePrice 7:stock 8:status(select)
+const QC = { title: 0, url: 1, sku: 2, cat: 3, weight: 4, regPrice: 5, salePrice: 6, stock: 7, status: 8 };
+
+function qcTimeSince(date) {
+    const s = Math.floor((new Date() - date) / 1000);
+    if (s < 60) return 'همین الان';
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m} دقیقه پیش`;
+    return 'قبل‌تر';
+}
+
+function qcUpdateTimers() {
+    Object.keys(qcRowLastEdits).forEach(idx => {
+        const tr = document.getElementById(`row-${idx}`);
+        if (!tr) return;
+        const cell = tr.querySelector('.time-cell');
+        if (cell) cell.textContent = qcTimeSince(qcRowLastEdits[idx]);
+    });
+}
+
+function checkCompleteness(tr) {
+    const idx = tr.id.split('-')[1];
+    qcRowLastEdits[idx] = new Date();
+
+    const badge = document.getElementById('autosave-badge');
+    if (badge) {
+        badge.innerHTML = '<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1"></span>ذخیره شد';
+        badge.classList.add('saving-indicator');
+        setTimeout(() => badge.classList.remove('saving-indicator'), 1500);
+    }
+
+    const inputs = tr.querySelectorAll('.sheet-input');
+
+    // Validate URL: English, digits, hyphens only
+    const urlInput = inputs[QC.url];
+    const urlVal   = urlInput ? urlInput.value : '';
+    const urlOk    = /^[a-zA-Z0-9\-\/]*$/.test(urlVal);
+    if (urlInput) {
+        if (!urlOk && urlVal.length > 0) {
+            urlInput.classList.add('invalid-field');
+            urlInput.title = 'فقط حروف انگلیسی و خط‌تیره';
+        } else {
+            urlInput.classList.remove('invalid-field');
+            urlInput.title = '';
+        }
+    }
+
+    // Required: title, url, salePrice, stock, category  (image excluded — always a separate task)
+    const missing = [];
+    let filled = 0;
+    const total  = 5;
+
+    const titleVal = inputs[QC.title]?.value.trim() ?? '';
+    if (!titleVal)           { missing.push('عنوان'); }     else filled++;
+    if (!urlVal || !urlOk)   { missing.push('URL'); }       else filled++;
+
+    const salePriceVal = inputs[QC.salePrice]?.value.trim() ?? '';
+    if (!salePriceVal)       { missing.push('قیمت فروش'); } else filled++;
+
+    const stockVal = inputs[QC.stock]?.value.trim() ?? '';
+    if (!stockVal)           { missing.push('موجودی'); }    else filled++;
+
+    const catVal = inputs[QC.cat]?.value ?? '';
+    if (!catVal)             { missing.push('دسته‌بندی'); } else filled++;
+
+    // Progress bar
+    const pct = Math.round((filled / total) * 100);
+    const pctColor = pct < 40 ? 'bg-rose-500' : pct < 90 ? 'bg-amber-500' : 'bg-emerald-500';
+    const barEl  = tr.querySelector('.progress-bar-fill');
+    const textEl = tr.querySelector('.progress-text');
+    if (barEl)  { barEl.style.width = `${pct}%`; barEl.className = `progress-bar-fill h-1.5 rounded-full transition-all duration-500 ${pctColor}`; }
+    if (textEl) textEl.textContent = `${pct}٪`;
+
+    // Status select + error label
+    const statusSel  = tr.querySelector('.status-select');
+    const errorLabel = tr.querySelector('.error-label');
+    if (statusSel && errorLabel) {
+        if (missing.length > 0) {
+            statusSel.value = 'incomplete';
+            statusSel.className = 'sheet-input status-select appearance-none text-sm cursor-pointer font-bold text-rose-400 p-0 h-auto pointer-events-auto';
+            const shown = missing.slice(0, 3).join('، ') + (missing.length > 3 ? '...' : '');
+            errorLabel.innerHTML = `ناقص: <span class="text-[9px] text-rose-500/70 font-normal">${shown}</span>`;
+        } else {
+            if (['incomplete', 'draft'].includes(statusSel.value)) statusSel.value = 'review';
+            const st    = qcStatuses.find(s => s.id === statusSel.value) ?? qcStatuses[0];
+            statusSel.className = `sheet-input status-select appearance-none text-sm cursor-pointer font-bold ${st.color} p-0 h-auto pointer-events-auto`;
+            errorLabel.innerHTML = '<span class="text-[9px] text-emerald-500/80">تکمیل شده ✓</span>';
+        }
+    }
+}
+
+function qcCreateRowHTML(index, data = {}) {
+    const catOpts    = qcCategories.map(c =>
+        `<option value="${c}"${data.category === c ? ' selected' : ''}>${c}</option>`
+    ).join('');
+    const statusOpts = qcStatuses.map(s =>
+        `<option value="${s.id}">${s.label}</option>`
+    ).join('');
+    qcRowLastEdits[index] = new Date();
+
+    const esc = v => String(v || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+    return `
+    <tr class="group hover:bg-slate-800/30 transition-colors" id="row-${index}">
+        <td class="border-l border-slate-800/50 px-2 py-0 text-center text-slate-500 text-[11px] font-mono select-none w-10">${index}</td>
+        <td class="border-l border-slate-800/50 p-1.5 text-center w-14">
+            <div class="mx-auto w-8 h-8 bg-slate-800 rounded-md flex items-center justify-center border border-slate-700/80 cursor-pointer hover:border-indigo-500 hover:bg-slate-700 text-slate-600 hover:text-indigo-400 transition-colors" title="آپلود تصویر">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+        </td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[200px]"><input type="text" placeholder="عنوان محصول..." class="sheet-input" oninput="checkCompleteness(this.closest('tr'))" value="${esc(data.title)}"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[160px]"><input type="text" dir="ltr" placeholder="product-slug" class="sheet-input font-mono text-[12px]" style="text-align:left" oninput="checkCompleteness(this.closest('tr'))" value="${esc(data.url)}"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[110px]"><input type="text" dir="ltr" placeholder="SKU-001" class="sheet-input font-mono text-[12px]" style="text-align:left" oninput="checkCompleteness(this.closest('tr'))" value="${esc(data.sku)}"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[130px]">
+            <select class="sheet-input appearance-none text-sm cursor-pointer" onchange="checkCompleteness(this.closest('tr'))">
+                <option value="" disabled selected>انتخاب...</option>${catOpts}
+            </select>
+        </td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[90px]"><input type="text" placeholder="۱ کیلو" class="sheet-input text-sm text-center" oninput="checkCompleteness(this.closest('tr'))"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[120px]"><input type="number" dir="ltr" placeholder="0" class="sheet-input font-mono text-[12px] text-slate-400" style="text-align:left;text-decoration:line-through;text-decoration-color:#475569" oninput="checkCompleteness(this.closest('tr'))"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[120px]"><input type="number" dir="ltr" placeholder="0" class="sheet-input font-mono text-[12px] font-bold text-emerald-400" style="text-align:left" oninput="checkCompleteness(this.closest('tr'))"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[80px]"><input type="number" dir="ltr" placeholder="0" class="sheet-input font-mono text-[12px] text-center" oninput="checkCompleteness(this.closest('tr'))"></td>
+        <td class="border-l border-slate-800/50 p-0 relative min-w-[150px]">
+            <div class="absolute inset-0 flex flex-col justify-center px-3 pointer-events-none">
+                <select class="sheet-input status-select appearance-none text-sm cursor-pointer font-bold text-slate-400 p-0 h-auto pointer-events-auto" onchange="checkCompleteness(this.closest('tr'))">
+                    ${statusOpts}
+                </select>
+                <div class="error-label text-[9px] text-rose-500/80 font-bold truncate pointer-events-none mt-0.5">ناقص: عنوان، قیمت...</div>
+            </div>
+        </td>
+        <td class="border-l border-slate-800/50 px-2 py-0 text-center select-none min-w-[100px]">
+            <div class="flex items-center gap-1.5 justify-center">
+                <div class="w-14 bg-slate-800 rounded-full h-1.5 overflow-hidden shrink-0"><div class="progress-bar-fill bg-rose-500 h-1.5 rounded-full" style="width:0%"></div></div>
+                <span class="progress-text text-[10px] font-mono text-slate-400 w-7 shrink-0">0٪</span>
+            </div>
+        </td>
+        <td class="time-cell border-l border-slate-800/50 px-2 py-0 text-center text-[10px] text-slate-500 select-none min-w-[90px]">همین الان</td>
+        <td class="p-0 text-center sticky left-0 z-10 bg-slate-900 group-hover:bg-slate-800/60 transition-colors shadow-[-4px_0_8px_rgba(0,0,0,0.25)] min-w-[120px]">
+            <div class="flex items-center justify-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity px-1.5">
+                <button onclick="openTaskModal('ردیف',${index})" tabindex="-1" title="ایجاد تسک" class="text-slate-500 hover:text-amber-400 p-1.5 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                </button>
+                <button onclick="qcDuplicateRow(${index})" tabindex="-1" title="تکرار ردیف" class="text-slate-500 hover:text-sky-400 p-1.5 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </button>
+                <button onclick="openEditModal(${index})" tabindex="-1" title="ویرایش جامع" class="text-slate-500 hover:text-indigo-400 p-1.5 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                </button>
+                <button onclick="qcDeleteRow(${index})" tabindex="-1" title="حذف ردیف" class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+        </td>
+    </tr>`;
+}
+
+function addRow(data = {}) {
+    const tbody = document.getElementById('sheet-body');
+    if (!tbody) return;
+    qcRowCount++;
+    tbody.insertAdjacentHTML('beforeend', qcCreateRowHTML(qcRowCount, data));
+    const newRow = document.getElementById(`row-${qcRowCount}`);
+    if (newRow) {
+        checkCompleteness(newRow);
+        document.getElementById('table-scroll-container')?.scrollTo({ top: 999999, behavior: 'smooth' });
+    }
+}
+
+function qcDeleteRow(index) {
+    document.getElementById(`row-${index}`)?.remove();
+}
+
+function qcDuplicateRow(index) {
+    const row = document.getElementById(`row-${index}`);
+    if (!row) return;
+    const inputs = row.querySelectorAll('.sheet-input');
+    addRow({
+        title:    (inputs[QC.title]?.value ?? '') + ' (کپی)',
+        url:      inputs[QC.url]?.value   ? inputs[QC.url].value + '-copy' : '',
+        sku:      inputs[QC.sku]?.value   ? inputs[QC.sku].value + '-2'   : '',
+        category: inputs[QC.cat]?.value   ?? '',
+    });
+}
+
+function openEditModal(index) {
+    const row    = document.getElementById(`row-${index}`);
+    const nameEl = document.getElementById('modal-product-name');
+    if (row && nameEl) {
+        nameEl.textContent = row.querySelectorAll('.sheet-input')[QC.title]?.value || 'محصول جدید';
+    }
+    const backdrop = document.getElementById('edit-modal-backdrop');
+    const modal    = document.getElementById('edit-modal');
+    if (!backdrop || !modal) return;
+    backdrop.classList.replace('hidden-fade', 'visible-fade');
+    requestAnimationFrame(() => modal.classList.remove('scale-95'));
+}
+
+function closeEditModal() {
+    const backdrop = document.getElementById('edit-modal-backdrop');
+    const modal    = document.getElementById('edit-modal');
+    if (!backdrop || !modal) return;
+    modal.classList.add('scale-95');
+    backdrop.classList.replace('visible-fade', 'hidden-fade');
+}
+
+function switchModalTab(tabId) {
+    document.querySelectorAll('.modal-tab-content').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('block');
+    });
+    document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400', 'font-bold');
+        // Restore default colour; SEO tab gets amber when inactive
+        btn.classList.add(btn.id === 'tab-seo' ? 'text-amber-500' : 'text-slate-400');
+        btn.classList.add('font-medium');
+    });
+    document.getElementById(`content-${tabId}`)?.classList.replace('hidden', 'block');
+    const activeBtn = document.getElementById(`tab-${tabId}`);
+    if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400', 'text-amber-500', 'font-medium');
+        activeBtn.classList.add('bg-indigo-600/10', 'text-indigo-400', 'font-bold');
+    }
+}
+
+function openTaskModal(contextType, contextName) {
+    let text = 'محصول فعلی';
+    if (contextType === 'فیلد') text = `تکمیل فیلد [ ${contextName} ]`;
+    else if (contextType === 'ردیف') text = `بررسی ردیف شیت شماره ${contextName}`;
+    const el = document.getElementById('task-context-info');
+    if (el) el.textContent = text;
+    const backdrop = document.getElementById('task-modal-backdrop');
+    const modal    = document.getElementById('task-modal');
+    if (!backdrop || !modal) return;
+    backdrop.classList.replace('hidden-fade', 'visible-fade');
+    requestAnimationFrame(() => modal.classList.remove('scale-95'));
+}
+
+function closeTaskModal() {
+    const backdrop = document.getElementById('task-modal-backdrop');
+    const modal    = document.getElementById('task-modal');
+    if (!backdrop || !modal) return;
+    modal.classList.add('scale-95');
+    backdrop.classList.replace('visible-fade', 'hidden-fade');
+}
+
+function initQuickCreate() {
+    const tbody = document.getElementById('sheet-body');
+    if (!tbody) return;
+
+    // Set page header title
+    const titleEl = document.getElementById('header-title');
+    if (titleEl) titleEl.textContent = 'افزودن سریع محصولات';
+
+    // Seed 3 initial rows
+    for (let i = 0; i < 3; i++) addRow();
+
+    // Periodic last-edit label refresh
+    setInterval(qcUpdateTimers, 30000);
+
+    // ── Keyboard navigation ──────────────────────────────────────────────────
+    tbody.addEventListener('keydown', function (e) {
+        const target = e.target;
+        if (!target.classList.contains('sheet-input')) return;
+
+        const tr          = target.closest('tr');
+        const rows        = Array.from(tbody.children);
+        const rowIdx      = rows.indexOf(tr);
+        const allInputs   = Array.from(tr.querySelectorAll('.sheet-input'));
+        const colIdx      = allInputs.indexOf(target);
+        const isSelect    = target.tagName === 'SELECT';
+        let nextInput     = null;
+
+        if (e.key === 'Escape') { target.blur(); return; }
+
+        if (e.ctrlKey && e.key === 'd') {
+            e.preventDefault();
+            qcDuplicateRow(tr.id.split('-')[1]);
+            return;
+        }
+
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            const badge = document.getElementById('autosave-badge');
+            if (badge) {
+                badge.innerHTML = '<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 ml-1"></span>ذخیره شد';
+                badge.classList.add('saving-indicator');
+                setTimeout(() => badge.classList.remove('saving-indicator'), 1500);
+            }
+            return;
+        }
+
+        // Delete: remove empty row
+        if (e.key === 'Delete' && !isSelect && target.value === '' && rows.length > 1) {
+            e.preventDefault();
+            const prevTr = rows[rowIdx - 1] ?? rows[rowIdx + 1];
+            qcDeleteRow(tr.id.split('-')[1]);
+            if (prevTr) nextInput = prevTr.querySelectorAll('.sheet-input')[colIdx];
+        } else if (e.key === 'ArrowUp' && !isSelect) {
+            e.preventDefault();
+            if (rowIdx > 0) nextInput = rows[rowIdx - 1].querySelectorAll('.sheet-input')[colIdx];
+        } else if (e.key === 'ArrowDown' && !isSelect) {
+            e.preventDefault();
+            if (rowIdx < rows.length - 1) {
+                nextInput = rows[rowIdx + 1].querySelectorAll('.sheet-input')[colIdx];
+            } else { addRow(); nextInput = tbody.lastElementChild.querySelectorAll('.sheet-input')[colIdx]; }
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (e.shiftKey) {
+                if (rowIdx > 0) nextInput = rows[rowIdx - 1].querySelectorAll('.sheet-input')[colIdx];
+            } else {
+                if (rowIdx < rows.length - 1) {
+                    nextInput = rows[rowIdx + 1].querySelectorAll('.sheet-input')[colIdx];
+                } else { addRow(); nextInput = tbody.lastElementChild.querySelectorAll('.sheet-input')[colIdx]; }
+            }
+        } else if (e.key === 'Tab' && !e.shiftKey) {
+            // Tab → move left in RTL (previous column visually)
+            e.preventDefault();
+            if (colIdx > 0) nextInput = allInputs[colIdx - 1];
+            else if (rowIdx > 0) nextInput = rows[rowIdx - 1].querySelectorAll('.sheet-input')[allInputs.length - 1];
+        } else if (e.key === 'Tab' && e.shiftKey) {
+            e.preventDefault();
+            if (colIdx < allInputs.length - 1) nextInput = allInputs[colIdx + 1];
+            else if (rowIdx < rows.length - 1) nextInput = rows[rowIdx + 1].querySelectorAll('.sheet-input')[0];
+            else { addRow(); nextInput = tbody.lastElementChild.querySelectorAll('.sheet-input')[0]; }
+        } else if (e.key === 'ArrowRight' && !isSelect) {
+            if (target.selectionStart === 0 || target.value === '' || target.type === 'number') {
+                e.preventDefault();
+                if (colIdx > 0) nextInput = allInputs[colIdx - 1];
+                else if (rowIdx > 0) nextInput = rows[rowIdx - 1].querySelectorAll('.sheet-input')[allInputs.length - 1];
+            }
+        } else if (e.key === 'ArrowLeft' && !isSelect) {
+            if (target.selectionEnd === target.value.length || target.value === '' || target.type === 'number') {
+                e.preventDefault();
+                if (colIdx < allInputs.length - 1) nextInput = allInputs[colIdx + 1];
+                else if (rowIdx < rows.length - 1) nextInput = rows[rowIdx + 1].querySelectorAll('.sheet-input')[0];
+                else { addRow(); nextInput = tbody.lastElementChild.querySelectorAll('.sheet-input')[0]; }
+            }
+        }
+
+        if (nextInput) {
+            const container = document.getElementById('table-scroll-container');
+            if (container) {
+                const cr = container.getBoundingClientRect();
+                const ir = nextInput.getBoundingClientRect();
+                if (ir.right > cr.right) container.scrollLeft += (ir.right - cr.right) + 60;
+                else if (ir.left < cr.left) container.scrollLeft -= (cr.left - ir.left) + 60;
+            }
+            nextInput.focus();
+            if (nextInput.tagName === 'INPUT') setTimeout(() => nextInput.select(), 10);
+        }
+    });
+
+    // Auto-select text on focus
+    tbody.addEventListener('focusin', e => {
+        if (e.target.tagName === 'INPUT') setTimeout(() => e.target.select(), 0);
+    });
+
+    // ── Excel paste (multi-row, multi-column) ────────────────────────────────
+    tbody.addEventListener('paste', function (e) {
+        const active = document.activeElement;
+        if (!active.classList.contains('sheet-input')) return;
+        const raw = (e.clipboardData || window.clipboardData).getData('text');
+        if (!raw.includes('\t') && !raw.includes('\n')) return;
+
+        e.preventDefault();
+        const pasteRows = raw.split('\n').filter(r => r.trim() !== '');
+
+        pasteRows.forEach((rowData, rIdx) => {
+            const cols = rowData.split('\t');
+            if (rIdx === 0) {
+                const tr       = active.closest('tr');
+                const inputs   = tr.querySelectorAll('.sheet-input');
+                const startCol = Array.from(inputs).indexOf(active);
+                cols.forEach((val, cIdx) => {
+                    const target = inputs[startCol + cIdx];
+                    if (target) target.value = val.trim();
+                });
+                checkCompleteness(tr);
+            } else {
+                // New row: map col0→title, col1→url, col2→sku
+                addRow({
+                    title: cols[0]?.trim() ?? '',
+                    url:   cols[1]?.trim() ?? '',
+                    sku:   cols[2]?.trim() ?? '',
+                });
+                // Fill remaining columns (index 3+)
+                if (cols.length > 3) {
+                    const newTr  = tbody.lastElementChild;
+                    const inputs = newTr.querySelectorAll('.sheet-input');
+                    for (let c = 3; c < cols.length && c < inputs.length; c++) {
+                        if (cols[c].trim()) inputs[c].value = cols[c].trim();
+                    }
+                    checkCompleteness(newTr);
+                }
+            }
+        });
+    });
+
+    // Close modals on backdrop click
+    document.getElementById('edit-modal-backdrop')?.addEventListener('click', function (e) {
+        if (e.target === this) closeEditModal();
+    });
+    document.getElementById('task-modal-backdrop')?.addEventListener('click', function (e) {
+        if (e.target === this) closeTaskModal();
+    });
+}
+
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSidebar();
     switchTab('tasks-list');
     renderConnectionCards();
+    initQuickCreate();
 });
 
 // ─── Global Exports (required for onclick in Blade templates) ─────────────────
 // Vite bundles as <script type="module"> — functions must be on window to be
 // reachable from inline onclick attributes in server-rendered HTML.
-window.switchTab          = switchTab;
-window.toggleDrawer       = toggleDrawer;
-window.openModal          = openModal;
-window.closeModal         = closeModal;
-window.generateContent    = generateContent;
+window.switchTab            = switchTab;
+window.toggleDrawer         = toggleDrawer;
+window.openModal            = openModal;
+window.closeModal           = closeModal;
+window.generateContent      = generateContent;
 window.openConfigModal      = openConfigModal;
 window.saveConnectionsModal = saveConnectionsModal;
 window.disconnectService    = disconnectService;
+window.toggleSidebar        = toggleSidebar;
+window.openMobileSidebar    = openMobileSidebar;
+window.closeMobileSidebar   = closeMobileSidebar;
+window.qcSendAll            = function () {
+    const badge = document.getElementById('autosave-badge');
+    if (badge) {
+        badge.innerHTML = '<span class="inline-block w-1.5 h-1.5 rounded-full bg-indigo-500 ml-1"></span>ارسال به صف بررسی...';
+        badge.classList.add('saving-indicator');
+        setTimeout(() => { badge.classList.remove('saving-indicator'); badge.innerHTML = 'آفلاین'; }, 2000);
+    }
+};
+window.checkCompleteness    = checkCompleteness;
+window.addRow               = addRow;
+window.qcDeleteRow          = qcDeleteRow;
+window.qcDuplicateRow       = qcDuplicateRow;
+window.openEditModal        = openEditModal;
+window.closeEditModal       = closeEditModal;
+window.switchModalTab       = switchModalTab;
+window.openTaskModal        = openTaskModal;
+window.closeTaskModal       = closeTaskModal;

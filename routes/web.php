@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/changelog', [ChangelogController::class, 'index']);
+Route::get('/products/quick-create', fn() => view('products.quick-create'));

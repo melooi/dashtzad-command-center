@@ -188,20 +188,6 @@
                                 class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-4
                                        text-slate-100 text-sm focus:outline-none focus:border-brand-primary transition-colors">
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-300 mb-1.5">دلیل درخواست دسترسی <span class="text-rose-400">*</span></label>
-                            <textarea id="pf-reason" rows="2" placeholder="چرا به دسترسی پنل نیاز دارید؟"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-4
-                                       text-slate-100 text-sm focus:outline-none focus:border-brand-primary transition-colors resize-none"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-300 mb-1.5">
-                                معرف / تأییدکننده <span class="text-xs text-slate-500 font-normal">(اختیاری)</span>
-                            </label>
-                            <input type="text" id="pf-referrer" placeholder="نام شخصی که شما را معرفی کرده"
-                                class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2.5 px-4
-                                       text-slate-100 text-sm focus:outline-none focus:border-brand-primary transition-colors">
-                        </div>
                     </div>
 
                     <p id="profile-error" class="text-xs text-rose-400 mb-3 hidden w-full"></p>
@@ -435,8 +421,6 @@ async function authSaveProfile() {
         email:         document.getElementById('pf-email')?.value.trim(),
         department:    document.getElementById('pf-department')?.value.trim(),
         position:      document.getElementById('pf-position')?.value.trim(),
-        access_reason: document.getElementById('pf-reason')?.value.trim(),
-        referrer:      document.getElementById('pf-referrer')?.value.trim(),
     };
 
     try {

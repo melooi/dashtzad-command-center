@@ -114,8 +114,14 @@ class LoginController extends Controller
         $user = PanelUser::where('phone', $phone)->first();
 
         if (!$user) {
-            // New user — go to profile completion
             return response()->json(['ok' => true, 'redirect' => 'profile']);
+        }
+
+        // Auto-approve admin phone even if previously stuck in pending
+        $adminPhone = $this->normalizePhone(env('PANEL_ADMIN_PHONE', ''));
+        if ($adminPhone && $adminPhone === $phone && $user->status !== 'approved') {
+            $user->update(['status' => 'approved', 'role' => 'super_admin', 'approved_at' => now()]);
+            $user->refresh();
         }
 
         return match($user->status) {

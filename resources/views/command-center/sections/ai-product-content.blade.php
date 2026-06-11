@@ -44,12 +44,7 @@
                                py-3 rounded-xl transition-all shadow-lg shadow-indigo-900/20
                                flex justify-center items-center gap-2 disabled:opacity-60
                                disabled:cursor-not-allowed">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25
-                                 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5
-                                 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
-                    </svg>
+                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                     تولید محتوا
                 </button>
 
@@ -71,9 +66,7 @@
             {{-- Result (hidden until form submitted) --}}
             <div id="ai-result-state" class="hidden space-y-4">
                 <div class="flex items-center gap-2 mb-3">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                    </svg>
+                    <i class="fa-solid fa-circle-check text-lg text-emerald-400"></i>
                     <h3 class="font-bold text-emerald-400 text-sm">محتوا با موفقیت تولید شد</h3>
                 </div>
                 <div class="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">

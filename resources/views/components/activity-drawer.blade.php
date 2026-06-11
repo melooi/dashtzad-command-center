@@ -16,9 +16,7 @@
         <h2 class="text-base font-bold text-white">تاریخچه فعالیت‌ها</h2>
         <button onclick="toggleDrawer()"
                 class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+            <i class="fa-solid fa-xmark text-lg"></i>
         </button>
     </div>
 

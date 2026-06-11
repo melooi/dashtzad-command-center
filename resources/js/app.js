@@ -168,23 +168,23 @@ function closeModal(id) {
 
 const connectionServices = [
     // AI
-    { id: 'OpenAI', group: 'ai', name: 'OpenAI', desc: 'مدل‌های قدرتمند GPT برای پردازش متن و تصویر', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.1586 5.4426 6.0462 6.0462 0 0 0 .7411 6.8117 5.9847 5.9847 0 0 0 .5157 4.9108 6.0462 6.0462 0 0 0 6.5098 2.9 6.0651 6.0651 0 0 0 10.2757-2.1709 5.9847 5.9847 0 0 0 3.1586-5.4426 6.0462 6.0462 0 0 0-.7411-6.8117zm-9.0684 9.9242a4.4636 4.4636 0 0 1-2.876-1.0408l.1428-.0814 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4958 4.4954zm-7.1423-2.5255a4.4636 4.4636 0 0 1-1.0264-2.882l.1428.0814 4.7783 2.7582a.7948.7948 0 0 0 .7855 0l5.8428-3.3685V15.98a.071.071 0 0 1-.0359.0617l-4.8236 2.7844a4.504 4.504 0 0 1-5.6635-1.6062zm-2.0911-7.1423a4.4636 4.4636 0 0 1 1.8496-2.4228l-.0011.1628v5.5165a.7948.7948 0 0 0 .3927.6813l5.8428 3.3685-2.02 1.1686a.071.071 0 0 1-.074-.0104l-4.8236-2.7844a4.504 4.504 0 0 1-1.1664-5.68zm12.3995-1.8496a4.4636 4.4636 0 0 1 1.0264 2.882l-.1428-.0814-4.7783-2.7582a.7948.7948 0 0 0-.7855 0L5.9458 11.66v-2.186a.071.071 0 0 1 .0359-.0617l4.8236-2.7844a4.504 4.504 0 0 1 5.6635 1.6062zm2.0911 7.1423a4.4636 4.4636 0 0 1-1.8496 2.4228l.0011-.1628v-5.5165a.7948.7948 0 0 0-.3927-.6813l-5.8428-3.3685 2.02-1.1686a.071.071 0 0 1 .074.0104l4.8236 2.7844a4.504 4.504 0 0 1 1.1664 5.68zM12 13.9185a1.8687 1.8687 0 1 1 1.8687-1.8687A1.8687 1.8687 0 0 1 12 13.9185z"/></svg>` },
-    { id: 'Claude', group: 'ai', name: 'Claude', desc: 'مدل‌های تحلیلی و استدلالی Anthropic', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>` },
-    { id: 'Gemini', group: 'ai', name: 'Gemini', desc: 'هوش مصنوعی گوگل (Google DeepMind)', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.25c.34 3.73 3.02 6.41 6.75 6.75-3.73.34-6.41 3.02-6.75 6.75-.34-3.73-3.02-6.41-6.75-6.75 3.73-.34 6.41-3.02 6.75-6.75z"/></svg>` },
+    { id: 'OpenAI', group: 'ai', name: 'OpenAI', desc: 'مدل‌های قدرتمند GPT برای پردازش متن و تصویر', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-robot text-xl"></i>` },
+    { id: 'Claude', group: 'ai', name: 'Claude', desc: 'مدل‌های تحلیلی و استدلالی Anthropic', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-brain text-xl"></i>` },
+    { id: 'Gemini', group: 'ai', name: 'Gemini', desc: 'هوش مصنوعی گوگل (Google DeepMind)', connected: false, summaryLabel: 'Model', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-star text-xl"></i>` },
     // Site & Shop
-    { id: 'WordPress', group: 'site', name: 'WordPress', desc: 'اتصال به سایت محتوایی برای انتشار خودکار', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.158 12.786l-2.698 7.84c.806.236 1.657.365 2.54.365 1.047 0 2.05-.18 2.986-.51-.024-.037-.046-.078-.065-.123l-2.763-7.572zM3.008 12c0 3.56 2.07 6.634 5.068 8.092L3.788 8.341c-.506 1.117-.78 2.36-.78 3.659zm15.06-.208c0-.98-.316-1.577-.665-2.059-.447-.568-.867-1.026-.867-1.652 0-.69.52-1.31 1.25-1.31.028 0 .056.002.083.004C16.892 4.965 14.62 3.5 12 3.5c-2.88 0-5.412 1.432-6.853 3.61.127.003.247.006.353.006 1.126 0 2.85-.145 2.85-.145.58-.04.654.808.073.882 0 0-.58.074-1.233.108l3.935 11.696 2.36-7.075-1.688-4.62c-.58-.035-1.125-.108-1.125-.108-.58-.036-.506-.883.073-.883 0 0 1.761.146 2.815.146 1.127 0 2.852-.146 2.852-.146.58-.04.653.808.073.883 0 0-.58.073-1.234.108l3.89 11.455c1.472-1.642 2.37-3.802 2.37-6.147 0-.638-.13-1.236-.308-1.802zM12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22.5C6.201 22.5 1.5 17.799 1.5 12S6.201 1.5 12 1.5 22.5 6.201 22.5 12 17.799 22.5 12 22.5z"/></svg>` },
-    { id: 'WooCommerce', group: 'site', name: 'WooCommerce', desc: 'همگام‌سازی محصولات، قیمت‌ها و سفارشات', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>` },
+    { id: 'WordPress', group: 'site', name: 'WordPress', desc: 'اتصال به سایت محتوایی برای انتشار خودکار', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-brands fa-wordpress text-xl"></i>` },
+    { id: 'WooCommerce', group: 'site', name: 'WooCommerce', desc: 'همگام‌سازی محصولات، قیمت‌ها و سفارشات', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-brands fa-woocommerce text-xl"></i>` },
     // SMS
-    { id: 'MSGway', group: 'sms', name: 'MSGway', desc: 'مسیریابی هوشمند پیامک، تماس صوتی و پیام‌رسان‌ها', connected: false, summaryLabel: 'Provider', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>` },
+    { id: 'MSGway', group: 'sms', name: 'MSGway', desc: 'مسیریابی هوشمند پیامک، تماس صوتی و پیام‌رسان‌ها', connected: false, summaryLabel: 'Provider', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-comment-sms text-xl"></i>` },
     // Google
-    { id: 'GoogleCustomSearch', group: 'google', name: 'Custom Search', desc: 'API جستجوی سفارشی وب', connected: false, summaryLabel: 'CX', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>` },
-    { id: 'GoogleSearchConsole', group: 'google', name: 'Search Console', desc: 'مدیریت ایندکس و خطاهای سایت', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>` },
-    { id: 'GoogleAnalytics', group: 'google', name: 'Google Analytics', desc: 'دریافت آمار بازدیدکنندگان و رویدادها', connected: false, summaryLabel: 'Property ID', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>` },
-    { id: 'GoogleSheets', group: 'google', name: 'Google Sheets', desc: 'خروجی داده‌ها و گزارشات به شیت', connected: false, summaryLabel: 'Sheet ID', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>` },
+    { id: 'GoogleCustomSearch', group: 'google', name: 'Custom Search', desc: 'API جستجوی سفارشی وب', connected: false, summaryLabel: 'CX', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-magnifying-glass text-xl"></i>` },
+    { id: 'GoogleSearchConsole', group: 'google', name: 'Search Console', desc: 'مدیریت ایندکس و خطاهای سایت', connected: false, summaryLabel: 'URL', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-magnifying-glass-chart text-xl"></i>` },
+    { id: 'GoogleAnalytics', group: 'google', name: 'Google Analytics', desc: 'دریافت آمار بازدیدکنندگان و رویدادها', connected: false, summaryLabel: 'Property ID', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-chart-line text-xl"></i>` },
+    { id: 'GoogleSheets', group: 'google', name: 'Google Sheets', desc: 'خروجی داده‌ها و گزارشات به شیت', connected: false, summaryLabel: 'Sheet ID', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-table text-xl"></i>` },
     // Messengers
-    { id: 'TelegramBot', group: 'messengers', name: 'Telegram Bot', desc: 'ربات تلگرام برای نوتیفیکیشن‌ها', connected: false, summaryLabel: 'Bot', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.54.295l.188-2.85 5.176-4.664c.224-.2-.049-.308-.344-.112l-6.4 4.02-2.76-.864c-.6-.188-.61-.6.126-.888l10.814-4.168c.5-.188.95.106.828.91z"/></svg>` },
-    { id: 'BaleBot', group: 'messengers', name: 'Bale Bot', desc: 'ربات بله برای پیام‌های داخلی ایران', connected: false, summaryLabel: 'Bot', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>` },
-    { id: 'SMTPEmail', group: 'messengers', name: 'SMTP Email', desc: 'پروتکل ارسال ایمیل سیستمی', connected: false, summaryLabel: 'Host', summaryValue: '-', hasSecret: false, icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>` },
+    { id: 'TelegramBot', group: 'messengers', name: 'Telegram Bot', desc: 'ربات تلگرام برای نوتیفیکیشن‌ها', connected: false, summaryLabel: 'Bot', summaryValue: '-', hasSecret: false, icon: `<i class="fa-brands fa-telegram text-xl"></i>` },
+    { id: 'BaleBot', group: 'messengers', name: 'Bale Bot', desc: 'ربات بله برای پیام‌های داخلی ایران', connected: false, summaryLabel: 'Bot', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-message text-xl"></i>` },
+    { id: 'SMTPEmail', group: 'messengers', name: 'SMTP Email', desc: 'پروتکل ارسال ایمیل سیستمی', connected: false, summaryLabel: 'Host', summaryValue: '-', hasSecret: false, icon: `<i class="fa-solid fa-envelope text-xl"></i>` },
 ];
 
 const connectionServiceFields = {
@@ -324,7 +324,7 @@ function renderConnectionCards() {
             ? `<div class="flex gap-2 mt-2" onclick="event.stopPropagation()">
                    <button onclick="openConfigModal('${srv.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-bold py-2 rounded-lg transition-colors border border-slate-700">پیکربندی</button>
                    <button onclick="disconnectService('${srv.id}', event)" class="px-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-lg transition-colors border border-rose-500/20" title="قطع اتصال">
-                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                       <i class="fa-solid fa-ban text-sm"></i>
                    </button>
                </div>`
             : `<div class="flex gap-2 mt-2" onclick="event.stopPropagation()">
@@ -384,7 +384,7 @@ function openConfigModal(serviceId) {
                     <div class="relative">
                         <select data-field-type="select" data-field-name="${f.name}" dir="ltr" class="${inputBase} appearance-none cursor-pointer">${opts}</select>
                         <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-slate-500">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-solid fa-chevron-down text-xs"></i>
                         </div>
                     </div>`;
         } else {
@@ -460,10 +460,7 @@ function generateContent(e) {
     if (!btn) return;
 
     const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-    </svg> در حال پردازش...`;
+    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-lg"></i> در حال پردازش...`;
     btn.disabled = true;
 
     setTimeout(() => {
@@ -600,7 +597,7 @@ function qcCreateRowHTML(index, data = {}) {
         <td class="border-l border-slate-800/50 px-2 py-0 text-center text-slate-500 text-[11px] font-mono select-none w-10">${index}</td>
         <td class="border-l border-slate-800/50 p-1.5 text-center w-14">
             <div class="mx-auto w-8 h-8 bg-slate-800 rounded-md flex items-center justify-center border border-slate-700/80 cursor-pointer hover:border-indigo-500 hover:bg-slate-700 text-slate-600 hover:text-indigo-400 transition-colors" title="آپلود تصویر">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <i class="fa-solid fa-image text-sm"></i>
             </div>
         </td>
         <td class="border-l border-slate-800/50 p-0 relative min-w-[200px]"><input type="text" placeholder="عنوان محصول..." class="sheet-input" oninput="checkCompleteness(this.closest('tr'))" value="${esc(data.title)}"></td>
@@ -633,16 +630,16 @@ function qcCreateRowHTML(index, data = {}) {
         <td class="p-0 text-center sticky left-0 z-10 bg-slate-900 group-hover:bg-slate-800/60 transition-colors shadow-[-4px_0_8px_rgba(0,0,0,0.25)] min-w-[120px]">
             <div class="flex items-center justify-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity px-1.5">
                 <button onclick="openTaskModal('ردیف',${index})" tabindex="-1" title="ایجاد تسک" class="text-slate-500 hover:text-amber-400 p-1.5 rounded-lg transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <i class="fa-solid fa-clipboard-check text-sm"></i>
                 </button>
                 <button onclick="qcDuplicateRow(${index})" tabindex="-1" title="تکرار ردیف" class="text-slate-500 hover:text-sky-400 p-1.5 rounded-lg transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    <i class="fa-solid fa-copy text-sm"></i>
                 </button>
                 <button onclick="openEditModal(${index})" tabindex="-1" title="ویرایش جامع" class="text-slate-500 hover:text-indigo-400 p-1.5 rounded-lg transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                    <i class="fa-solid fa-pen text-sm"></i>
                 </button>
                 <button onclick="qcDeleteRow(${index})" tabindex="-1" title="حذف ردیف" class="text-slate-500 hover:text-rose-400 p-1.5 rounded-lg transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    <i class="fa-solid fa-trash text-sm"></i>
                 </button>
             </div>
         </td>
@@ -900,18 +897,130 @@ function initQuickCreate() {
     });
 }
 
+// ─── PJAX Router ─────────────────────────────────────────────────────────────
+
+let _pjaxXHR = null;
+
+function navigateTo(target) {
+    const isPath  = target.startsWith('/');
+    const hasSPA  = !isPath && !!document.getElementById('page-' + target);
+
+    if (hasSPA) {
+        // SPA tab already in DOM — instant switch
+        switchTab(target);
+        history.pushState({ tab: target }, '', '/?tab=' + target);
+        return;
+    }
+
+    const url = isPath ? target : ('/?tab=' + target);
+    _pjaxLoad(url, isPath ? { path: target } : { tab: target });
+}
+
+async function _pjaxLoad(url, state, { push = true } = {}) {
+    if (_pjaxXHR) { _pjaxXHR.abort(); }
+    _pjaxXHR = new AbortController();
+
+    _pjaxBar(true);
+    const main = document.querySelector('main');
+    if (main) { main.style.opacity = '0.45'; main.style.transition = 'opacity 0.15s'; }
+
+    try {
+        const res = await fetch(url, {
+            signal: _pjaxXHR.signal,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+
+        const html    = await res.text();
+        const doc     = new DOMParser().parseFromString(html, 'text/html');
+        const newMain = doc.querySelector('main');
+        if (!newMain) throw new Error('no-main');
+
+        if (main) {
+            main.innerHTML        = newMain.innerHTML;
+            main.style.opacity    = '1';
+            main.style.transition = 'opacity 0.2s';
+        }
+
+        if (push) history.pushState(state, '', url);
+        _pjaxAfterLoad(state);
+
+    } catch (err) {
+        if (err.name === 'AbortError') return;
+        window.location.href = url;
+    } finally {
+        _pjaxBar(false);
+        if (main) { main.style.opacity = ''; main.style.transition = ''; }
+        _pjaxXHR = null;
+    }
+}
+
+function _pjaxAfterLoad(state) {
+    if (document.getElementById('group-ai'))  renderConnectionCards();
+    if (document.getElementById('sheet-body')) initQuickCreate();
+    if (state.tab && document.getElementById('page-' + state.tab)) switchTab(state.tab);
+    _pjaxUpdateNav(state);
+}
+
+function _pjaxUpdateNav(state) {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400');
+        btn.classList.add('text-slate-400');
+    });
+
+    if (state.tab) {
+        const el = document.getElementById('nav-' + state.tab);
+        if (el) { el.classList.add('bg-indigo-600/10', 'text-indigo-400'); el.classList.remove('text-slate-400'); }
+    }
+
+    if (state.path) {
+        document.querySelectorAll('[data-nav-path]').forEach(btn => {
+            if (btn.dataset.navPath === state.path) {
+                btn.classList.add('bg-indigo-600/10', 'text-indigo-400');
+                btn.classList.remove('text-slate-400');
+            }
+        });
+    }
+}
+
+function _pjaxBar(on) {
+    document.getElementById('pjax-bar')?.classList.toggle('pjax-running', on);
+}
+
+window.addEventListener('popstate', e => {
+    const s = e.state;
+    if (!s) { window.location.reload(); return; }
+    if (s.tab && document.getElementById('page-' + s.tab)) {
+        switchTab(s.tab);
+    } else {
+        _pjaxLoad(window.location.href, s, { push: false });
+    }
+});
+
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
-    switchTab('tasks-list');
-    renderConnectionCards();
+
+    // Determine which tab to show (from URL ?tab= param or default)
+    const urlTab  = new URLSearchParams(window.location.search).get('tab');
+    const hasSPA  = !!document.getElementById('page-tasks-list');
+    const startTab = (urlTab && hasSPA && document.getElementById('page-' + urlTab))
+        ? urlTab : 'tasks-list';
+
+    if (hasSPA) {
+        switchTab(startTab);
+        history.replaceState({ tab: startTab }, '', '/?tab=' + startTab);
+        renderConnectionCards();
+    }
+
     initQuickCreate();
 });
 
 // ─── Global Exports (required for onclick in Blade templates) ─────────────────
 // Vite bundles as <script type="module"> — functions must be on window to be
 // reachable from inline onclick attributes in server-rendered HTML.
+window.navigateTo           = navigateTo;
 window.switchTab            = switchTab;
 window.toggleDrawer         = toggleDrawer;
 window.openModal            = openModal;

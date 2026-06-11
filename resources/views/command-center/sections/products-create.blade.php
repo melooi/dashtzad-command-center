@@ -5,10 +5,7 @@
             title="فرم افزودن محصول"
             description="ساختار فرم ثبت محصول جدید با تمام فیلدهای لازم اینجا قرار می‌گیرد.">
             <x-slot:icon>
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                          d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                </svg>
+                <i class="fa-solid fa-box text-2xl"></i>
             </x-slot:icon>
         </x-ui.empty-state>
     </div>

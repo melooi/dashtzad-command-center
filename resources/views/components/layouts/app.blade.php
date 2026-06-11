@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name', 'دشت‌زاد') }} — پنل فرماندهی</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body class="bg-slate-950 text-slate-300 antialiased h-screen flex overflow-hidden selection:bg-indigo-500/30">
 
@@ -27,6 +28,9 @@
          class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden-fade md:hidden"
          onclick="closeMobileSidebar()">
     </div>
+
+    {{-- PJAX loading bar --}}
+    <div id="pjax-bar"></div>
 
 </body>
 </html>

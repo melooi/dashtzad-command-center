@@ -55,9 +55,7 @@
                 تنظیمات <span id="modal-service-name" class="font-mono text-indigo-400" dir="ltr"></span>
             </h3>
             <button onclick="closeModal('config-modal')" class="text-slate-500 hover:text-white transition-colors bg-slate-800/50 hover:bg-slate-700 p-1.5 rounded-lg">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
         </div>
 

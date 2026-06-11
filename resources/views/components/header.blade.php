@@ -8,9 +8,7 @@
         <button onclick="openMobileSidebar()"
                 class="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"
                 title="باز کردن منو">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
+            <i class="fa-solid fa-bars text-lg"></i>
         </button>
         <h1 id="header-title"
             class="text-base font-bold text-white hidden sm:block tracking-tight">
@@ -23,11 +21,7 @@
 
         {{-- Search —— desktop only --}}
         <div class="relative hidden lg:block">
-            <svg class="w-4 h-4 text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+            <i class="fa-solid fa-magnifying-glass text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-sm"></i>
             <input type="text"
                    placeholder="جستجو..."
                    class="bg-slate-900 border border-slate-800 text-slate-200 text-sm
@@ -44,13 +38,7 @@
         <button onclick="toggleDrawer()"
                 class="relative p-2 text-slate-400 hover:text-slate-200
                        hover:bg-slate-800 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18
-                         9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64
-                         3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3
-                         3 0 1 1-5.714 0"/>
-            </svg>
+            <i class="fa-solid fa-bell text-lg"></i>
         </button>
 
         {{-- User avatar --}}

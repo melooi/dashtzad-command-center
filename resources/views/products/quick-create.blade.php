@@ -6,18 +6,7 @@
 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
     <div class="flex items-center gap-3">
         <div class="w-9 h-9 bg-indigo-600/20 border border-indigo-500/20 rounded-xl flex items-center justify-center shrink-0">
-            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"
-                      d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375
-                         19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125
-                         1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125
-                         1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0
-                         0h-7.5M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125
-                         1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0
-                         1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125
-                         1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0
-                         .621-.504 1.125-1.125 1.125m-17.25 0h7.5"/>
-            </svg>
+            <i class="fa-solid fa-table-list text-indigo-400 text-sm"></i>
         </div>
         <div>
             <h2 class="text-base font-bold text-white leading-tight">افزودن سریع محصولات</h2>
@@ -33,20 +22,12 @@
     <div class="flex items-center gap-2">
         <button class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium py-1.5 px-3 rounded-lg transition-colors border border-slate-700/80"
                 title="درون‌ریزی از فایل اکسل">
-            <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414
-                         5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
+            <i class="fa-solid fa-file-import text-emerald-400 text-sm shrink-0"></i>
             <span class="hidden sm:inline">درون‌ریزی</span>
         </button>
         <button class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium py-1.5 px-3 rounded-lg transition-colors border border-slate-700/80"
                 title="برون‌بری به فایل اکسل">
-            <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 14v-6m0 0l3 3m-3-3l-3 3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414
-                         5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
+            <i class="fa-solid fa-file-export text-sky-400 text-sm shrink-0"></i>
             <span class="hidden sm:inline">برون‌بری</span>
         </button>
         <div class="h-5 w-px bg-slate-700"></div>
@@ -102,9 +83,7 @@
                     <td colspan="14" class="py-3 px-4 border-t border-dashed border-slate-700/60">
                         <div class="flex items-center justify-center gap-2 text-indigo-400 text-xs font-bold
                                     opacity-70 group-hover:opacity-100 transition-opacity">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
+                            <i class="fa-solid fa-plus text-sm"></i>
                             افزودن ردیف جدید
                         </div>
                     </td>
@@ -140,19 +119,13 @@
         {{-- Modal header --}}
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800/80 shrink-0">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2
-                             2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
+                <i class="fa-solid fa-pen text-indigo-400 text-sm shrink-0"></i>
                 ویرایش جامع:
                 <span id="modal-product-name" class="text-slate-400 font-normal">محصول جدید</span>
             </h3>
             <button onclick="closeEditModal()"
                     class="text-slate-500 hover:text-white bg-slate-800/60 hover:bg-slate-700 p-1.5 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
@@ -198,10 +171,7 @@
                             توضیح کوتاه
                             <button onclick="openTaskModal('فیلد','توضیح کوتاه محصول')"
                                     class="text-slate-500 hover:text-amber-400 transition-colors" title="ایجاد تسک">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                                </svg>
+                                <i class="fa-solid fa-clipboard-check text-xs"></i>
                             </button>
                         </label>
                         <textarea rows="2"
@@ -213,10 +183,7 @@
                             توضیح کامل
                             <button onclick="openTaskModal('فیلد','توضیح کامل محصول')"
                                     class="text-slate-500 hover:text-amber-400 transition-colors" title="ایجاد تسک">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                                </svg>
+                                <i class="fa-solid fa-clipboard-check text-xs"></i>
                             </button>
                         </label>
                         <textarea rows="6"
@@ -228,10 +195,7 @@
                             ویژگی‌ها (بولت‌پوینت)
                             <button onclick="openTaskModal('فیلد','ویژگی‌های محصول')"
                                     class="text-slate-500 hover:text-amber-400 transition-colors" title="ایجاد تسک">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                                </svg>
+                                <i class="fa-solid fa-clipboard-check text-xs"></i>
                             </button>
                         </label>
                         <textarea rows="3"
@@ -247,7 +211,7 @@
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 قیمت خرید (تومان)
                                 <button onclick="openTaskModal('فیلد','قیمت خرید')" class="text-slate-500 hover:text-amber-400 transition-colors" title="تسک">
-                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                    <i class="fa-solid fa-clipboard-check text-xs"></i>
                                 </button>
                             </label>
                             <input type="number" dir="ltr" placeholder="جهت محاسبه سود"
@@ -257,7 +221,7 @@
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 قیمت خط‌خورده
                                 <button onclick="openTaskModal('فیلد','قیمت عادی')" class="text-slate-500 hover:text-amber-400 transition-colors" title="تسک">
-                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                    <i class="fa-solid fa-clipboard-check text-xs"></i>
                                 </button>
                             </label>
                             <input type="number" dir="ltr"
@@ -267,7 +231,7 @@
                             <label class="flex items-center gap-1.5 text-sm text-emerald-400 font-bold mb-2">
                                 قیمت فروش سایت
                                 <button onclick="openTaskModal('فیلد','قیمت فروش')" class="text-slate-500 hover:text-amber-400 transition-colors" title="تسک">
-                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                    <i class="fa-solid fa-clipboard-check text-xs"></i>
                                 </button>
                             </label>
                             <input type="number" dir="ltr"
@@ -290,16 +254,13 @@
                             تصویر اصلی محصول
                             <span class="text-rose-500">*</span>
                             <button onclick="openTaskModal('فیلد','تصویر اصلی')" class="text-slate-500 hover:text-amber-400 transition-colors" title="تسک">
-                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                <i class="fa-solid fa-clipboard-check text-xs"></i>
                             </button>
                         </label>
                         <div class="w-full border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-10
                                     flex flex-col items-center justify-center text-slate-500 cursor-pointer
                                     bg-slate-950/40 hover:bg-slate-950 transition-colors gap-3">
-                            <svg class="w-10 h-10 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                            </svg>
+                            <i class="fa-solid fa-image text-slate-700 text-4xl"></i>
                             <span class="text-sm font-medium text-slate-400">برای آپلود کلیک کنید یا فایل را اینجا رها کنید</span>
                             <span class="text-[11px] text-slate-600">PNG, JPG, WEBP تا ۵ مگابایت</span>
                         </div>
@@ -308,7 +269,7 @@
                         <label class="text-sm font-bold text-slate-200 mb-2 block">گالری تصاویر</label>
                         <div class="grid grid-cols-6 gap-2">
                             <div class="aspect-square border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-lg flex items-center justify-center cursor-pointer text-slate-600 hover:text-indigo-400 transition-colors bg-slate-950/40 hover:bg-slate-950">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                <i class="fa-solid fa-plus text-lg"></i>
                             </div>
                         </div>
                     </div>
@@ -320,7 +281,7 @@
                         <div>
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 کد محصول (SKU)
-                                <button onclick="openTaskModal('فیلد','SKU')" class="text-slate-500 hover:text-amber-400 transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></button>
+                                <button onclick="openTaskModal('فیلد','SKU')" class="text-slate-500 hover:text-amber-400 transition-colors"><i class="fa-solid fa-clipboard-check text-xs"></i></button>
                             </label>
                             <input type="text" dir="ltr"
                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 font-mono outline-none focus:border-indigo-500 transition-colors">
@@ -328,7 +289,7 @@
                         <div>
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 موجودی انبار
-                                <button onclick="openTaskModal('فیلد','موجودی انبار')" class="text-slate-500 hover:text-amber-400 transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></button>
+                                <button onclick="openTaskModal('فیلد','موجودی انبار')" class="text-slate-500 hover:text-amber-400 transition-colors"><i class="fa-solid fa-clipboard-check text-xs"></i></button>
                             </label>
                             <input type="number" dir="ltr"
                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 outline-none font-mono focus:border-indigo-500 transition-colors">
@@ -364,7 +325,7 @@
                         <div>
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 عنوان سئو
-                                <button onclick="openTaskModal('فیلد','عنوان سئو')" class="text-slate-500 hover:text-amber-400 transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></button>
+                                <button onclick="openTaskModal('فیلد','عنوان سئو')" class="text-slate-500 hover:text-amber-400 transition-colors"><i class="fa-solid fa-clipboard-check text-xs"></i></button>
                             </label>
                             <input type="text"
                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 outline-none focus:border-indigo-500 transition-colors">
@@ -372,7 +333,7 @@
                         <div>
                             <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                                 اسلاگ (URL) <span class="text-rose-500">*</span>
-                                <button onclick="openTaskModal('فیلد','اسلاگ URL')" class="text-slate-500 hover:text-amber-400 transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></button>
+                                <button onclick="openTaskModal('فیلد','اسلاگ URL')" class="text-slate-500 hover:text-amber-400 transition-colors"><i class="fa-solid fa-clipboard-check text-xs"></i></button>
                             </label>
                             <input type="text" dir="ltr" placeholder="فقط انگلیسی و خط‌تیره"
                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-slate-200 outline-none font-mono focus:border-indigo-500 transition-colors"
@@ -383,7 +344,7 @@
                     <div>
                         <label class="flex items-center gap-1.5 text-sm text-slate-400 mb-2">
                             متا دیسکریپشن
-                            <button onclick="openTaskModal('فیلد','متا دیسکریپشن')" class="text-slate-500 hover:text-amber-400 transition-colors"><svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></button>
+                            <button onclick="openTaskModal('فیلد','متا دیسکریپشن')" class="text-slate-500 hover:text-amber-400 transition-colors"><i class="fa-solid fa-clipboard-check text-xs"></i></button>
                         </label>
                         <textarea rows="2"
                                   class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-sm text-slate-200 outline-none resize-none focus:border-indigo-500 transition-colors"></textarea>
@@ -479,17 +440,12 @@
 
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800/80 shrink-0">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
+                <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>
                 ایجاد تسک جدید
             </h3>
             <button onclick="closeTaskModal()"
                     class="text-slate-500 hover:text-white bg-slate-800/60 hover:bg-slate-700 p-1.5 rounded-lg transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
         </div>
 
@@ -507,7 +463,7 @@
                         <option>تیم سئو — mock</option>
                     </select>
                     <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-slate-500">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <i class="fa-solid fa-chevron-down text-sm"></i>
                     </div>
                 </div>
             </div>

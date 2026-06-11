@@ -25,10 +25,7 @@
         </span>
 
         {{-- Chevron --}}
-        <svg class="w-4 h-4 transform group-open:-rotate-180 transition-transform duration-200 shrink-0 sb-chevron"
-             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-        </svg>
+        <i class="fa-solid fa-chevron-down text-xs transform group-open:-rotate-180 transition-transform duration-200 shrink-0 sb-chevron"></i>
     </summary>
 
     {{-- Sub-items --}}

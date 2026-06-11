@@ -150,3 +150,26 @@ input[type=number].sheet-input { -moz-appearance: textfield; }
 
 @keyframes pulse-save { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 .saving-indicator { animation: pulse-save 1.5s ease-in-out infinite; }
+
+/* ── PJAX loading bar ────────────────────────────────────────────────────── */
+#pjax-bar {
+    position: fixed;
+    top: 0; inset-inline-start: 0; inset-inline-end: 0;
+    height: 2px;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+}
+#pjax-bar.pjax-running { background: rgba(99,102,241,0.15); }
+#pjax-bar.pjax-running::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40%;
+    background: #6366f1;
+    animation: pjax-slide 1s ease-in-out infinite;
+}
+@keyframes pjax-slide {
+    0%   { inset-inline-start: -40%; }
+    100% { inset-inline-start: 110%; }
+}

@@ -12,11 +12,14 @@ class PanelAuth
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $authEnabled = AppSetting::get('panel_auth_enabled', '0') === '1';
-
-        if (!$authEnabled) {
+        try {
+            $authEnabled = AppSetting::get('panel_auth_enabled', '0') === '1';
+        } catch (\Throwable) {
+            // Table not yet migrated — treat auth as disabled
             return $next($request);
         }
+
+        if (!$authEnabled) return $next($request);
 
         $userId = session('panel_user_id');
 

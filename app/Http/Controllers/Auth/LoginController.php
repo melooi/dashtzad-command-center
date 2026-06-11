@@ -62,15 +62,18 @@ class LoginController extends Controller
             'ip_address' => $request->ip(),
         ]);
 
-        // Log OTP (replace with real SMS in production)
-        Log::info("[OTP] Phone: {$phone} — Code: {$code}");
+        // Send OTP via SMS (or log in development)
+        \App\Services\SmsService::sendOtp($phone, $code);
 
-        // Store phone in session for verification step
         session(['auth_phone' => $phone, 'auth_otp_id' => $otp->id]);
 
         LoginLog::record(['phone' => $phone, 'status' => 'otp_sent', 'ip_address' => $request->ip(), 'user_agent' => $request->userAgent()]);
 
-        return response()->json(['ok' => true, 'phone' => $phone]);
+        $response = ['ok' => true, 'phone' => $phone];
+        if (app()->environment('local')) {
+            $response['dev_otp'] = $code;
+        }
+        return response()->json($response);
     }
 
     public function verifyOtp(Request $request): JsonResponse

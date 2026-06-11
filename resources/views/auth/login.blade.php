@@ -77,6 +77,15 @@
                 <p class="text-sm text-slate-400 mb-1 text-center">کد ۵ رقمی ارسال شده به</p>
                 <p id="display-phone" dir="ltr" class="text-sm font-bold text-brand-primary mb-7 tracking-widest"></p>
 
+                {{-- DEV mode: show OTP code --}}
+                @if(app()->environment('local'))
+                <div id="dev-otp-banner" class="hidden w-full mb-4 bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-2.5 flex items-center gap-2.5">
+                    <i class="fa-solid fa-flask text-amber-400 text-xs shrink-0"></i>
+                    <span class="text-xs text-amber-400">DEV — کد OTP:</span>
+                    <span id="dev-otp-code" dir="ltr" class="font-mono font-bold text-amber-300 tracking-[0.2em] text-base"></span>
+                </div>
+                @endif
+
                 {{-- OTP inputs --}}
                 <div class="flex justify-center gap-2.5 mb-6 w-full max-w-[260px]" dir="ltr" id="otp-inputs">
                     <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp1" oninput="otpMove(this,'otp2')">
@@ -291,6 +300,11 @@ async function authSendOtp(resend = false) {
         authSwitchView('view-otp');
         startOtpTimer(120);
         document.getElementById('otp1')?.focus();
+        if (data.dev_otp) {
+            const banner = document.getElementById('dev-otp-banner');
+            const code   = document.getElementById('dev-otp-code');
+            if (banner && code) { code.textContent = data.dev_otp; banner.classList.remove('hidden'); banner.classList.add('flex'); }
+        }
     } catch {
         if (errEl) { errEl.textContent = 'خطا در ارتباط با سرور'; errEl.classList.remove('hidden'); }
     } finally {

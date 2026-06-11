@@ -1368,16 +1368,19 @@ function tmAISubmit() {
 function updateHeaderDateTime() {
     const el = document.querySelector('[data-header-datetime]');
     if (!el) return;
-    const now  = new Date();
-    const date = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
-        weekday: 'long', month: 'long', day: 'numeric',
-        timeZone: 'Asia/Tehran',
-    }).format(now);
-    const time = new Intl.DateTimeFormat('fa-IR', {
-        hour: '2-digit', minute: '2-digit', hour12: false,
-        timeZone: 'Asia/Tehran',
-    }).format(now);
-    el.textContent = `${date} | ${time}`;
+    try {
+        const now = new Date();
+        const tz  = 'Asia/Tehran';
+        const pc  = 'fa-IR-u-ca-persian';
+        const fmt = opts => new Intl.DateTimeFormat(pc, { timeZone: tz, ...opts }).format(now);
+        const weekday = fmt({ weekday: 'long' });
+        const day     = fmt({ day: 'numeric' });
+        const month   = fmt({ month: 'long' });
+        const time    = new Intl.DateTimeFormat('fa-IR', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: tz }).format(now);
+        el.textContent = `${weekday} ${day} ${month} | ${time}`;
+    } catch {
+        el.textContent = '—';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

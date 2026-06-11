@@ -63,9 +63,14 @@
             {{-- Fields injected by JS --}}
         </div>
 
+        <div id="modal-conn-error" class="hidden mx-6 mb-1 flex items-center gap-2 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm rounded-xl px-4 py-3">
+            <i class="fa-solid fa-circle-exclamation shrink-0"></i>
+            <span id="modal-conn-error-msg"></span>
+        </div>
+
         <div class="p-5 border-t border-slate-800/80 flex gap-3 bg-slate-850/50 rounded-b-2xl shrink-0">
             <button onclick="closeModal('config-modal')" class="flex-1 py-2.5 text-sm font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-xl transition-colors">انصراف</button>
-            <button onclick="saveConnectionsModal()" class="flex-[2] py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-colors shadow-lg shadow-indigo-900/20">ذخیره تغییرات</button>
+            <button id="modal-save-btn" onclick="saveConnectionsModal()" class="flex-[2] py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-colors shadow-lg shadow-indigo-900/20">ذخیره تغییرات</button>
         </div>
 
     </div>

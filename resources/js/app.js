@@ -400,50 +400,86 @@ function openConfigModal(serviceId) {
     requestAnimationFrame(() => modal.classList.remove('scale-95'));
 }
 
-function saveConnectionsModal() {
+async function saveConnectionsModal() {
     if (!_currentModalSrvId) { closeModal('config-modal'); return; }
 
-    const srv = connectionServices.find(s => s.id === _currentModalSrvId);
-    const SENSITIVE = ['secret', 'textarea_secret'];
+    const srv         = connectionServices.find(s => s.id === _currentModalSrvId);
+    const SENSITIVE   = ['secret', 'textarea_secret'];
     const allFieldEls = [...document.querySelectorAll('#modal-fields-container [data-field-type]')];
-
-    // Select elements always have a value — only non-select inputs count as "user actively filled something"
     const fillableEls = allFieldEls.filter(el => el.tagName.toLowerCase() !== 'select');
     const hasAnyValue = fillableEls.some(el => el.value.trim() !== '');
 
-    const existing = loadConnStates()[_currentModalSrvId];
+    const existing         = loadConnStates()[_currentModalSrvId];
     const alreadyConnected = !!(existing?.connected);
 
-    if (hasAnyValue) {
-        // summaryValue: only from non-sensitive, non-select fields — prefer url/text over number
-        const nonSensitive = allFieldEls.filter(el =>
+    _connHideError();
+
+    // No new credentials + already connected → preserve state, just close
+    if (!hasAnyValue && alreadyConnected) { closeModal('config-modal'); return; }
+    // No credentials + not connected → just close
+    if (!hasAnyValue) { closeModal('config-modal'); return; }
+
+    // Collect field values for backend test
+    const fields = {};
+    allFieldEls.forEach(el => { fields[el.dataset.fieldName] = el.value.trim(); });
+
+    const btn = document.getElementById('modal-save-btn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sm"></i> در حال بررسی...'; }
+
+    try {
+        const res  = await fetch('/connections/test', {
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+            },
+            body: JSON.stringify({ service: _currentModalSrvId, fields }),
+        });
+        const data = await res.json();
+
+        if (!data.ok) {
+            _connShowError(data.message || 'اتصال برقرار نشد');
+            if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
+            return;
+        }
+
+        // Test passed → persist UI state (never store credentials in localStorage)
+        const nonSensitive  = allFieldEls.filter(el =>
             !SENSITIVE.includes(el.dataset.fieldType) && el.tagName.toLowerCase() !== 'select'
         );
-        const summaryField =
+        const summaryField  =
             nonSensitive.find(el => (el.dataset.fieldType === 'url' || el.dataset.fieldType === 'text') && el.value.trim()) ||
-            nonSensitive.find(el => el.value.trim());
-        const summaryValue = summaryField ? summaryField.value.trim() : 'ذخیره شده';
+            nonSensitive.find(el => el.value.trim()) ||
+            allFieldEls.find(el => el.tagName.toLowerCase() === 'select');
+        const summaryValue  = summaryField ? summaryField.value.trim() : 'ذخیره شده';
 
         saveConnState(_currentModalSrvId, {
-            connected: true,
-            summaryLabel: srv ? srv.summaryLabel : '',
+            connected:    true,
+            summaryLabel: srv?.summaryLabel ?? '',
             summaryValue,
-            updatedAt: new Date().toISOString(),
+            updatedAt:    new Date().toISOString(),
         });
 
-        // Clear all sensitive inputs — credentials must never linger in the DOM
-        allFieldEls.forEach(el => {
-            if (SENSITIVE.includes(el.dataset.fieldType)) el.value = '';
-        });
-
+        allFieldEls.forEach(el => { if (SENSITIVE.includes(el.dataset.fieldType)) el.value = ''; });
         renderConnectionCards();
-    } else if (!alreadyConnected) {
+        if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
         closeModal('config-modal');
-        return;
-    }
-    // Already connected + no new values entered → preserve existing state, just close
 
-    closeModal('config-modal');
+    } catch (_) {
+        _connShowError('خطا در ارتباط با سرور');
+        if (btn) { btn.disabled = false; btn.innerHTML = 'ذخیره تغییرات'; }
+    }
+}
+
+function _connShowError(msg) {
+    const box = document.getElementById('modal-conn-error');
+    const txt = document.getElementById('modal-conn-error-msg');
+    if (txt) txt.textContent = msg;
+    if (box) box.classList.remove('hidden');
+}
+
+function _connHideError() {
+    document.getElementById('modal-conn-error')?.classList.add('hidden');
 }
 
 function disconnectService(id, event = null) {
@@ -999,8 +1035,25 @@ window.addEventListener('popstate', e => {
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
+function updateHeaderDateTime() {
+    const el = document.querySelector('[data-header-datetime]');
+    if (!el) return;
+    const now  = new Date();
+    const date = new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+        timeZone: 'Asia/Tehran',
+    }).format(now);
+    const time = new Intl.DateTimeFormat('fa-IR', {
+        hour: '2-digit', minute: '2-digit', hour12: false,
+        timeZone: 'Asia/Tehran',
+    }).format(now);
+    el.textContent = `امروز: ${date} — ${time}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
+    updateHeaderDateTime();
+    setInterval(updateHeaderDateTime, 60000);
 
     // Determine which tab to show (from URL ?tab= param or default)
     const urlTab  = new URLSearchParams(window.location.search).get('tab');

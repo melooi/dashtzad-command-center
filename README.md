@@ -1,41 +1,51 @@
 # Dashtzad Command Center
 
-A private command center built on Laravel + Filament for managing operations, data, and integrations from a single admin panel.
+پنل فرماندهی اختصاصی دشت‌زاد برای مدیریت عملیات، محتوا، فروش، و یکپارچگی‌های خارجی از یک رابط واحد.
 
-## Status
+## وضعیت
 
-> **Phase Zero** — Foundation documentation only. Laravel and Filament installation pending a real environment with Packagist access.
+**در تولید (Production)** — نسخه `v0.1-production` در دسترس است.
 
-## Tech Stack
+- آدرس: [https://tools.dashtzad.com](https://tools.dashtzad.com)
+- UI Command Center پیاده‌سازی شده
+- صفحه Connections (frontend-only) فعال است
+- Backend واقعی برای اتصالات در roadmap آینده قرار دارد
 
-- **Backend:** Laravel 11
-- **Admin Panel:** Filament 3
-- **Database:** MySQL 8 / PostgreSQL 16
-- **PHP:** 8.2+
+## Stack فنی
 
-## Quick Start (Local / VPS)
+| لایه | ابزار |
+|------|------|
+| Backend | Laravel 13 |
+| Admin Panel | Filament 4 |
+| PHP | 8.4 (production) |
+| Database | MariaDB |
+| Web Server | Nginx + PHP-FPM |
+| Frontend | Vite + Tailwind CSS v4 |
+| فونت | IRANYekanX (self-hosted) |
 
-Requires Composer with Packagist access.
+## راه‌اندازی محلی
 
 ```bash
-composer create-project laravel/laravel dashtzad-command-center
+git clone https://github.com/melooi/dashtzad-command-center.git
 cd dashtzad-command-center
-composer require filament/filament:"^3.0" -W
-php artisan filament:install --panels
+composer install
+cp .env.example .env
+php artisan key:generate
+# مقادیر DB را در .env تنظیم کن
 php artisan migrate
-php artisan make:filament-user
-```
-
-Then start the dev server:
-
-```bash
+npm install
+npm run dev
 php artisan serve
 ```
 
-Visit `http://localhost:8000/admin`.
+## مستندات
 
-## Documentation
-
-- [Setup Guide](docs/setup.md)
-- [Architecture](docs/architecture.md)
+- [راهنمای نصب](docs/setup.md)
+- [معماری](docs/architecture.md)
+- [محدوده MVP](docs/mvp-scope.md)
+- [Design System](docs/design/design-system.md)
+- [قوانین UI](docs/design/ui-rules.md)
+- [کامپوننت‌ها](docs/design/components.md)
+- [صفحه Connections](docs/design/connections-page.md)
 - [Roadmap](ROADMAP.md)
+- [Security](SECURITY.md)

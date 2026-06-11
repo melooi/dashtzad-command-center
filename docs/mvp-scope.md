@@ -1,58 +1,78 @@
-# MVP Scope — Phase Zero
+# MVP Scope
 
-## What Phase Zero Includes
+## انجام‌شده (v0.1-production)
 
-- Repository structure and clean `.gitignore`
-- Documentation files: `README.md`, `ROADMAP.md`, `SECURITY.md`, `docs/setup.md`, `docs/architecture.md`, `docs/mvp-scope.md`
-- Exact local setup commands for Mac, VPS, and GitHub Codespaces
-- Architecture overview and phase roadmap
-- Security policy baseline
+### زیرساخت
 
-## What Phase Zero Excludes
+- [x] Laravel 13 + Filament 4 نصب و پیکربندی شده
+- [x] MariaDB + Nginx + PHP-FPM روی VPS
+- [x] SSL با Certbot — `https://tools.dashtzad.com`
+- [x] Deploy از GitHub main branch
+- [x] فونت IRANYekanX self-hosted
 
-Phase Zero is **documentation and planning only**. Nothing below exists in this repository yet.
+### UI Command Center
 
-### Framework
+- [x] Layout اصلی RTL با Sidebar + Header + Activity Drawer
+- [x] سیستم tab switching (JS + CSS)
+- [x] Blade components: `layouts/app`، `sidebar`، `header`، `activity-drawer`
+- [x] Nav components: `nav/item`، `nav/group`، `nav/subitem`
+- [x] UI components: `ui/empty-state`، `ui/stat-card`، `ui/btn`
+- [x] صفحات section در `resources/views/command-center/sections/`
 
-- No Laravel installation — `composer.json`, `artisan`, `app/`, `bootstrap/`, `config/`, `routes/`, `vendor/` do not exist.
-- No Filament installation — no panel scaffold, no resources, no pages, no widgets.
-- No fake or manually written Laravel/Filament files as substitutes.
+### صفحه Connections (Frontend-only)
 
-### Integrations
-
-- No SMS integration (no provider, no OTP logic, no queue jobs for messaging)
-- No Telegram bot or Bale messenger integration
-- No WooCommerce connection or product sync
-- No OpenAI or Claude AI integration
-- No AI Manager or agent orchestration logic
-
-### Business Logic
-
-- No product price change workflows
-- No product publish or delete workflows
-- No bulk messaging or campaign dispatch
-- No coupon generation logic
-- No approval gateway implementation
-
-## Initial Seed Data Plan
-
-After Laravel and Filament are installed and migrations have run, seeders and config files will be added for the following:
-
-| Seed | Purpose |
-|------|---------|
-| **Roles** | Initial role set (e.g. Super Admin, Manager, Operator) wired into Filament access policies |
-| **Tools Registry** | Registry of available command-center tools/actions with metadata (name, category, requires approval) |
-| **Notification Channels** | Supported output channels (SMS, Telegram, Bale, email) with enabled/disabled state |
-| **API Provider Types** | Named provider types for external integrations (WooCommerce, OpenAI, Claude, SMS gateway, etc.) |
-| **Task Statuses & Priorities** | Lookup values for task/job tracking (e.g. pending, in-progress, done; low, normal, high, critical) |
-| **Approval Action Types** | Enumeration of action categories that require the Approval Gateway (price change, publish, bulk SMS, etc.) |
-
-None of these seeders or config files will be created until the framework is installed in a real environment. This section is a planning reference only.
+- [x] ۱۳ سرویس در ۵ گروه با کارت UI
+- [x] مودال پیکربندی برای هر سرویس
+- [x] وضعیت connected/disconnected با localStorage
+- [x] قانون امنیتی: هیچ credential در localStorage ذخیره نمی‌شود
+- [x] Secret inputs بعد از save از DOM پاک می‌شوند
 
 ---
 
-## Why
+## مرحله بعد
 
-Laravel and Filament must be installed via Composer with Packagist access. The current CI/cloud environment blocks outbound traffic to `packagist.org`. Installation will be performed on a local Mac, VPS, or GitHub Codespaces where Packagist is reachable. See [docs/setup.md](setup.md) for exact commands.
+### Backend Connections (اولویت اول)
 
-Once the framework is installed, Phase One begins: Filament panel scaffold, first resource, role/permission setup.
+- [ ] جدول `service_connections` در database
+- [ ] رمزنگاری credentials با Laravel `encrypt()`
+- [ ] API endpoint برای ذخیره، خواندن، و حذف
+- [ ] حذف وابستگی به localStorage
+
+### احراز هویت
+
+- [ ] User auth (Laravel / Filament)
+- [ ] Role + Permission
+- [ ] Access policies
+
+### ماژول‌های کاری
+
+- [ ] محصولات (WooCommerce sync)
+- [ ] وظایف (Kanban)
+- [ ] محتوای سایت
+- [ ] فروش (سفارش‌ها)
+- [ ] انبار
+
+### یکپارچگی‌های واقعی
+
+- [ ] OpenAI / Claude از backend
+- [ ] MSGway SMS
+- [ ] Telegram Bot
+- [ ] Google Analytics
+- [ ] WordPress REST API
+
+### زیرساخت
+
+- [ ] CI pipeline
+- [ ] Queue worker
+- [ ] Audit log
+- [ ] Health check
+
+---
+
+## آنچه هنوز پیاده‌سازی نشده
+
+- **Backend Connections:** اتصالات در localStorage هستند، نه database. Credentials ذخیره نمی‌شوند.
+- **Auth:** هنوز هیچ سیستم احراز هویتی پیاده‌سازی نشده. پنل بدون login در دسترس است.
+- **Filament Resources:** هنوز هیچ resource تعریف نشده.
+- **داده واقعی:** تمام صفحات به جز Connections دارای empty state هستند.
+- **Queue و Jobs:** هنوز پیاده‌سازی نشده.

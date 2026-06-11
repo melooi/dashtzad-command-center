@@ -1,85 +1,107 @@
 # Architecture Overview
 
-## High-Level Structure
+## Stack واقعی
+
+| لایه | ابزار | نسخه |
+|------|------|------|
+| Framework | Laravel | 13 |
+| Admin Panel | Filament | 4 |
+| PHP | PHP-FPM | 8.4 |
+| Database | MariaDB | — |
+| Web Server | Nginx | — |
+| Asset Pipeline | Vite + Tailwind CSS v4 | — |
+| Version Control | GitHub (main branch = production) | — |
+
+---
+
+## ساختار فایل‌های مهم
 
 ```
 dashtzad-command-center/
 ├── app/
-│   ├── Filament/
-│   │   ├── Pages/          # Custom Filament pages (e.g. Dashboard)
-│   │   ├── Resources/      # CRUD resources (each maps to a model)
-│   │   └── Widgets/        # Dashboard widgets
-│   ├── Models/             # Eloquent models
-│   ├── Services/           # Business logic, external API clients
-│   └── Jobs/               # Queued background jobs
-├── config/
-├── database/
-│   ├── migrations/
-│   └── seeders/
-├── docs/                   # This documentation
-├── public/
+│   ├── Filament/          # پنل ادمین Filament (در حال توسعه)
+│   ├── Models/            # Eloquent models
+│   ├── Services/          # کلاینت‌های API خارجی (Planned)
+│   └── Jobs/              # Queue jobs (Planned)
+├── docs/                  # مستندات پروژه
+│   └── design/            # Design system و UI rules
 ├── resources/
+│   ├── css/app.css        # Tailwind v4 + فونت IRANYekanX
+│   ├── js/app.js          # JS اصلی (tab switching، connections، modals)
 │   └── views/
-├── routes/
-│   └── web.php
-└── storage/
+│       ├── components/    # Blade components (layout، nav، ui)
+│       └── command-center/ # صفحات Command Center
+│           └── sections/  # هر tab یک فایل جدا
+├── public/
+│   ├── build/             # خروجی Vite (git-ignored در پروژه‌های معمول)
+│   └── fonts/             # IRANYekanX self-hosted
+└── routes/web.php         # مسیرهای web
 ```
-
-> This structure is the standard Laravel layout. It does not exist yet — it will be created when `composer create-project` is run on a real environment.
 
 ---
 
-## Key Layers
+## Command Center — معماری UI
 
-### Admin Panel (Filament Admin Panel, using the latest stable version compatible with the selected Laravel version)
+Command Center یک Single-Page App شبیه‌سازی‌شده با Blade است:
 
-> The exact Laravel/Filament versions must be finalized during real Composer installation in an environment with Packagist access.
-
-All UI lives inside the Filament admin panel at `/admin`. Filament generates:
-- **Resources** — list/create/edit/view pages backed by Eloquent models
-- **Pages** — standalone pages (e.g. a custom dashboard or settings page)
-- **Widgets** — stats, charts, and tables embeddable in dashboard pages
-
-### Models & Database
-
-Standard Laravel Eloquent models. Migrations are version-controlled in `database/migrations/`. No raw SQL — all schema changes go through migrations.
-
-### Services Layer
-
-External integrations (APIs, webhooks, third-party clients) will live in `app/Services/`. Each service is a plain PHP class injected via Laravel's service container. No API keys or credentials are stored in code — all via `.env`.
-
-### Jobs & Queues
-
-Background tasks use Laravel's queue system (`php artisan queue:work`). In development `QUEUE_CONNECTION=sync` runs jobs inline. Production will use `database` or `redis`.
+- یک صفحه PHP رندر می‌شود (`/`)
+- هر section با `id="page-xxx"` و class `hidden` مخفی است
+- `switchTab(id)` در `app.js` section فعال را نمایش می‌دهد
+- Sidebar با `<x-nav.item tab="...">` و `<x-nav.subitem tab="...">` tab switching را trigger می‌کند
+- توابع JS باید روی `window` ثبت شوند (Vite module scope ایزوله است)
 
 ---
 
-## Filament Panel Configuration
-
-After `php artisan filament:install --panels`, the panel provider lives at:
+## Asset Pipeline
 
 ```
-app/Providers/Filament/AdminPanelProvider.php
+resources/css/app.css  →  Vite + Tailwind v4  →  public/build/assets/app-xxx.css
+resources/js/app.js    →  Vite (ES module)    →  public/build/assets/app-xxx.js
 ```
 
-This is where navigation, middleware, plugins, and theme are registered.
+- `@vite(['resources/css/app.css', 'resources/js/app.js'])` در layout اصلی
+- در production: `npm run build` خروجی minified با hash می‌سازد
+- توابعی که از `onclick` در Blade صدا زده می‌شوند باید `window.xxx = fn` داشته باشند
 
 ---
 
-## Authentication
+## Deploy Flow
 
-Filament uses Laravel's built-in authentication. The `users` table is seeded with the first admin via:
-
-```bash
-php artisan make:filament-user
 ```
-
-Role-based access (Phase One) will use **Spatie Laravel Permission** (`spatie/laravel-permission`) integrated with Filament's resource access policies.
+git push origin main
+↓ (روی سرور)
+git pull origin main
+npm install
+npm run build
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
 
 ---
 
-## Deployment Target
+## Services Layer (Planned)
 
-- **Local dev:** `php artisan serve` or Laravel Herd / Valet (Mac)
-- **VPS:** Nginx + PHP-FPM, systemd queue worker, MySQL/PostgreSQL
-- **Future:** Docker Compose (Phase Four)
+کلاینت‌های API خارجی در `app/Services/` قرار خواهند گرفت:
+
+- هر سرویس یک PHP class جداگانه
+- بدون API key در کد — همه از `.env` می‌آیند
+- Credentials در database رمزنگاری‌شده ذخیره می‌شوند
+
+---
+
+## Authentication (Planned)
+
+- Laravel built-in auth
+- Filament panel auth
+- Spatie Laravel Permission برای نقش و دسترسی
+- Access policies روی هر Filament resource
+
+---
+
+## Queues (Planned)
+
+- پیش‌فرض: `QUEUE_CONNECTION=sync` (local)
+- Production: `database` یا `redis`
+- موارد: ارسال SMS، تولید محتوا AI، sync محصولات WooCommerce

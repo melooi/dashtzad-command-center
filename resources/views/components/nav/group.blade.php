@@ -10,8 +10,8 @@
 @props(['title', 'open' => false])
 
 <details class="group [&_summary::-webkit-details-marker]:hidden" @if($open) open @endif>
-    <summary class="sb-group-summary flex items-center px-3 py-2.5 rounded-xl text-slate-400
-                    hover:text-slate-200 hover:bg-slate-800 transition-colors cursor-pointer select-none"
+    <summary class="sb-group-summary flex items-center px-3 py-2.5 rounded-xl text-text-muted
+                    hover:text-text-main hover:bg-border transition-colors cursor-pointer select-none"
              title="{{ $title }}">
 
         {{-- Icon --}}
@@ -20,7 +20,7 @@
         </span>
 
         {{-- Label --}}
-        <span class="mr-3 font-medium text-sm flex-1 group-open:text-slate-200 transition-colors sb-text">
+        <span class="mr-3 font-medium text-sm flex-1 group-open:text-text-main transition-colors sb-text">
             {{ $title }}
         </span>
 
@@ -29,7 +29,7 @@
     </summary>
 
     {{-- Sub-items --}}
-    <div class="mt-1 sb-subitems pr-9 space-y-0.5 border-r border-slate-800/60 mr-5 mb-2">
+    <div class="mt-1 sb-subitems pr-9 space-y-0.5 border-r border-border/60 mr-5 mb-2">
         {{ $slot }}
     </div>
 </details>

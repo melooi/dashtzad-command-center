@@ -37,6 +37,9 @@ Route::middleware(['panel.auth'])->group(function () {
 
     // Settings
     Route::post('/settings/toggle-auth', [SettingsController::class, 'togglePanelAuth']);
+    Route::get('/settings/theme',        [SettingsController::class, 'getTheme']);
+    Route::post('/settings/theme',       [SettingsController::class, 'saveTheme']);
+    Route::post('/settings/upload-logo', [SettingsController::class, 'uploadLogo']);
 
     // Admin — panel user management
     Route::prefix('admin/users')->name('admin.users.')->group(function () {

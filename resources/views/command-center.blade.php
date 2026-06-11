@@ -40,6 +40,7 @@
     @include('command-center.sections.settings-users')
     @include('command-center.sections.settings-roles')
     @include('command-center.sections.settings-brand')
+    @include('command-center.sections.settings-theme')
     @include('command-center.sections.settings-system')
 
 </x-layouts.app>

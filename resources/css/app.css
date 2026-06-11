@@ -6,81 +6,116 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* IRANYekanX — Local Fonts */
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Thin.woff') format('woff');
-    font-weight: 100; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-UltraLight.woff') format('woff');
-    font-weight: 200; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Light.woff') format('woff');
-    font-weight: 300; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Regular.woff') format('woff');
-    font-weight: 400; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Medium.woff') format('woff');
-    font-weight: 500; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-DemiBold.woff') format('woff');
-    font-weight: 600; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Bold.woff') format('woff');
-    font-weight: 700; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-ExtraBold.woff') format('woff');
-    font-weight: 800; font-display: swap;
-}
-@font-face {
-    font-family: 'IRANYekanX';
-    src: url('/fonts/IRANYekanX-Heavy.woff') format('woff');
-    font-weight: 900; font-display: swap;
-}
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Thin.woff') format('woff'); font-weight:100; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-UltraLight.woff') format('woff'); font-weight:200; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Light.woff') format('woff'); font-weight:300; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Regular.woff') format('woff'); font-weight:400; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Medium.woff') format('woff'); font-weight:500; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-DemiBold.woff') format('woff'); font-weight:600; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Bold.woff') format('woff'); font-weight:700; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-ExtraBold.woff') format('woff'); font-weight:800; font-display:swap; }
+@font-face { font-family:'IRANYekanX'; src:url('/fonts/IRANYekanX-Heavy.woff') format('woff'); font-weight:900; font-display:swap; }
 
+/* ── Theme Tokens — Tailwind utility generation (@theme) ─────────────────── */
 @theme {
+    /* Font */
     --font-sans: 'IRANYekanX', Tahoma, Arial, sans-serif;
+
+    /* Extra slate shade */
     --color-slate-850: #151e2e;
 
-    /* Brand palette */
+    /* ── Semantic color tokens (overridable at runtime) ── */
+    --color-primary:    #315A3A;
+    --color-secondary:  #A8794A;
+    --color-accent:     #C9A66B;
+    --color-success:    #10B981;
+    --color-warning:    #F59E0B;
+    --color-danger:     #EF4444;
+    --color-info:       #3B82F6;
+
+    /* Surface tokens — dark mode defaults */
+    --color-bg:         #020617;
+    --color-surface:    #0f172a;
+    --color-border:     #1e293b;
+    --color-text-main:  #e2e8f0;
+    --color-text-muted: #64748b;
+    --color-sidebar:    #0f172a;
+    --color-header:     #020617;
+
+    /* Radius tokens */
+    --radius-btn:    0.5rem;
+    --radius-card:   1rem;
+    --radius-modal:  1.5rem;
+    --radius-badge:  9999px;
+
+    /* Brand palette (backwards compat — will be remapped to semantic tokens below) */
     --color-brand-primary:   #315A3A;
     --color-brand-secondary: #A8794A;
     --color-brand-tertiary:  #C9A66B;
     --color-brand-neutral:   #767874;
 }
 
-/* ── Light mode: remap dark slate utilities ─────────────────────────────── */
+/* ── Runtime-only tokens (not Tailwind utilities) ────────────────────────── */
+:root {
+    --font-family:         'IRANYekanX', Tahoma, Arial, sans-serif;
+    --font-english:        'Inter', monospace;
+    --modal-blur:          8px;
+    --modal-overlay:       rgba(0,0,0,0.6);
+    --table-row-hover:     rgba(255,255,255,0.05);
+}
+
+/* ── Map brand tokens to semantic tokens (so brand-* classes follow theme) ─ */
+:root {
+    --color-brand-primary:   var(--color-primary);
+    --color-brand-secondary: var(--color-secondary);
+    --color-brand-tertiary:  var(--color-accent);
+}
+
+/* ── Dark mode: set surface tokens + remap slate utilities to tokens ───────── */
+html.dark {
+    --color-bg:          #020617;
+    --color-surface:     #0f172a;
+    --color-border:      #1e293b;
+    --color-text-main:   #e2e8f0;
+    --color-text-muted:  #64748b;
+    --color-sidebar:     #0f172a;
+    --color-header:      #020617;
+
+    /* ALL bg-slate-*/text-slate-*/border-slate-* classes now follow theme tokens */
+    --color-slate-950: var(--color-bg);
+    --color-slate-900: var(--color-surface);
+    --color-slate-800: var(--color-border);
+    --color-slate-300: var(--color-text-main);
+    --color-slate-400: #94a3b8;
+    --color-slate-500: var(--color-text-muted);
+}
+
+/* ── Light mode: set surface tokens + remap slate utilities ─────────────── */
 html:not(.dark) {
-    --color-slate-950: #f4f4f5;
-    --color-slate-900: #ffffff;
+    --color-bg:          #f4f4f5;
+    --color-surface:     #ffffff;
+    --color-border:      #e4e4e7;
+    --color-text-main:   #374151;
+    --color-text-muted:  #71717a;
+    --color-sidebar:     #ffffff;
+    --color-header:      #f4f4f5;
+
+    --color-slate-950: var(--color-bg);
+    --color-slate-900: var(--color-surface);
     --color-slate-850: #f0f0ee;
-    --color-slate-800: #e4e4e7;
+    --color-slate-800: var(--color-border);
     --color-slate-700: #d1d1d5;
     --color-slate-600: #52525b;
-    --color-slate-500: #71717a;
+    --color-slate-500: var(--color-text-muted);
     --color-slate-400: #6b7280;
-    --color-slate-300: #374151;
+    --color-slate-300: var(--color-text-main);
     --color-slate-200: #1f2937;
     --color-slate-100: #f9fafb;
     --color-slate-50:  #f3f4f6;
-    /* indigo → brand-primary so existing indigo classes adapt */
-    --color-indigo-600: #315A3A;
+
+    --color-indigo-600: var(--color-primary);
     --color-indigo-500: #3d6e47;
-    --color-indigo-400: #315A3A;
+    --color-indigo-400: var(--color-primary);
     --color-indigo-900: rgba(49, 90, 58, 0.15);
 }
 html:not(.dark) .text-white               { color: #1a1a1a; }
@@ -88,20 +123,40 @@ html:not(.dark) .hover\:text-white:hover  { color: #1a1a1a; }
 html:not(.dark) .group-open\:text-white   { color: #1a1a1a; }
 html:not(.dark) ::-webkit-scrollbar-thumb              { background: #d4d4d8; }
 html:not(.dark) ::-webkit-scrollbar-thumb:hover        { background: #a1a1aa; }
-html:not(.dark) #pjax-bar.pjax-running                { background: rgba(49,90,58,0.12); }
-html:not(.dark) #pjax-bar.pjax-running::after         { background: #315A3A; }
-html:not(.dark) .kanban-col.drag-over                  { background-color: rgba(49,90,58,0.08); border-color: #315A3A !important; }
-html:not(.dark) .sheet-input                           { color: #1f2937; }
-html:not(.dark) .sheet-input:focus                     { background-color: #f1f5f9; box-shadow: inset 0 0 0 2px #315A3A; }
+html:not(.dark) #pjax-bar.pjax-running                { background: rgba(var(--color-primary), 0.12); }
+html:not(.dark) #pjax-bar.pjax-running::after         { background: var(--color-primary); }
+html:not(.dark) .kanban-col.drag-over                  { background-color: color-mix(in srgb, var(--color-primary) 8%, transparent); border-color: var(--color-primary) !important; }
+html:not(.dark) .sheet-input                           { color: var(--color-text-main); }
+html:not(.dark) .sheet-input:focus                     { background-color: #f1f5f9; box-shadow: inset 0 0 0 2px var(--color-primary); }
 html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(244,63,94,0.05) !important; }
 
-/* Scrollbar */
+/* ── Typography: apply CSS font vars to document ──────────────────────────── */
+html, body      { font-family: var(--font-family); }
+.font-en,
+[dir="ltr"] input, [dir="ltr"] code, pre { font-family: var(--font-english); }
+
+/* ── Sidebar: use explicit token for bg (for when CSS var cascade needs it) ─ */
+#sidebar   { background-color: var(--color-sidebar); }
+header     { background-color: color-mix(in srgb, var(--color-header) 80%, transparent); }
+#activity-drawer { background-color: var(--color-surface); border-color: var(--color-border); }
+
+/* ── Table row hover via token ───────────────────────────────────────────── */
+.tr-hover:hover { background-color: var(--table-row-hover); }
+
+/* ── Modal token application ─────────────────────────────────────────────── */
+.modal-overlay-bg {
+    background: var(--modal-overlay);
+    backdrop-filter: blur(var(--modal-blur));
+    -webkit-backdrop-filter: blur(var(--modal-blur));
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-/* Fade transitions for drawers & modals */
+/* ── Fade transitions ────────────────────────────────────────────────────── */
 .hidden-fade {
     opacity: 0; pointer-events: none; visibility: hidden;
     transition: opacity 0.2s ease, visibility 0.2s ease;
@@ -111,31 +166,29 @@ html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(
     transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
-/* Connection card hover */
+/* ── Connection card ─────────────────────────────────────────────────────── */
 .clickable-card { cursor: pointer; }
-.clickable-card:hover .card-title { color: var(--color-brand-secondary); }
+.clickable-card:hover .card-title { color: var(--color-secondary); }
 
-/* Kanban drag & drop */
+/* ── Kanban drag & drop ──────────────────────────────────────────────────── */
 .kanban-col { transition: background-color 0.15s ease, border-color 0.15s ease; }
 .kanban-col.drag-over {
-    background-color: rgba(49, 90, 58, 0.1);
-    border-color: #315A3A !important;
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    border-color: var(--color-primary) !important;
     border-style: dashed !important;
 }
-.kanban-card.dragging  { opacity: 0.45; transform: scale(0.97); }
-.kanban-card.tm-ghost  { opacity: 0.3; }
+.kanban-card.dragging { opacity: 0.45; transform: scale(0.97); }
+.kanban-card.tm-ghost { opacity: 0.3; }
 
-/* Task checkbox */
+/* ── Task checkbox ───────────────────────────────────────────────────────── */
 .task-checkbox {
     appearance: none; -webkit-appearance: none;
     width: 1.1rem; height: 1.1rem;
     border: 2px solid #52525b;
-    border-radius: 50%;
-    outline: none; cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative; flex-shrink: 0;
+    border-radius: 50%; outline: none; cursor: pointer;
+    transition: all 0.2s ease; position: relative; flex-shrink: 0;
 }
-.task-checkbox:checked { background-color: #315A3A; border-color: #315A3A; }
+.task-checkbox:checked { background-color: var(--color-primary); border-color: var(--color-primary); }
 .task-checkbox:checked::after {
     content: '';
     position: absolute; left: 50%; top: 45%;
@@ -144,19 +197,8 @@ html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(
     transform: translate(-50%,-50%) rotate(45deg);
 }
 
-/* Utility */
-.hide-scrollbar::-webkit-scrollbar { display: none; }
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* ── Sidebar: desktop collapse + mobile drawer ──────────────────────────── */
-#sidebar {
-    flex-shrink: 0;
-    min-width: 0;
-    overflow: hidden;
-    transition: width 0.25s ease;
-}
-
-/* Desktop */
+/* ── Sidebar: desktop collapse + mobile drawer ───────────────────────────── */
+#sidebar { flex-shrink: 0; min-width: 0; overflow: hidden; transition: width 0.25s ease; }
 @media (min-width: 768px) {
     #sidebar { width: 16rem; }
     #sidebar.sb-collapsed { width: 5rem; }
@@ -168,16 +210,12 @@ html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(
     #sidebar.sb-collapsed .sb-subitems { display: none !important; }
     #sidebar.sb-collapsed .sb-toggle-btn { justify-content: center; }
 }
-
-/* Mobile: fixed drawer from right */
 @media (max-width: 767px) {
     #sidebar {
-        position: fixed;
-        top: 0; right: 0; bottom: 0;
+        position: fixed; top: 0; right: 0; bottom: 0;
         width: min(18rem, 85vw);
         transform: translateX(110%);
-        transition: transform 0.3s ease;
-        z-index: 60;
+        transition: transform 0.3s ease; z-index: 60;
     }
     #sidebar.sb-mobile-open { transform: translateX(0); }
 }
@@ -187,23 +225,21 @@ html:not(.dark) .sheet-input.invalid-field             { background-color: rgba(
     width: 100%; height: 100%;
     background-color: transparent;
     padding: 0.625rem 0.875rem;
-    color: #e2e8f0;
-    outline: none;
-    border: none;
+    color: var(--color-text-main);
+    outline: none; border: none;
     transition: background-color 0.15s ease;
 }
 .sheet-input:focus {
-    background-color: #1e293b;
-    box-shadow: inset 0 0 0 2px #315A3A;
-    z-index: 10;
-    position: relative;
+    background-color: var(--color-border);
+    box-shadow: inset 0 0 0 2px var(--color-primary);
+    z-index: 10; position: relative;
 }
 .sheet-input.invalid-field {
     background-color: rgba(244, 63, 94, 0.08) !important;
-    color: #f43f5e !important;
+    color: var(--color-danger) !important;
     font-weight: 700;
 }
-.sheet-input.invalid-field:focus { box-shadow: inset 0 0 0 2px #f43f5e !important; }
+.sheet-input.invalid-field:focus { box-shadow: inset 0 0 0 2px var(--color-danger) !important; }
 input[type=number].sheet-input::-webkit-inner-spin-button,
 input[type=number].sheet-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number].sheet-input { -moz-appearance: textfield; }
@@ -213,23 +249,21 @@ input[type=number].sheet-input { -moz-appearance: textfield; }
 
 /* ── PJAX loading bar ────────────────────────────────────────────────────── */
 #pjax-bar {
-    position: fixed;
-    top: 0; inset-inline-start: 0; inset-inline-end: 0;
-    height: 2px;
-    z-index: 9999;
-    pointer-events: none;
-    overflow: hidden;
+    position: fixed; top: 0; inset-inline-start: 0; inset-inline-end: 0;
+    height: 2px; z-index: 9999; pointer-events: none; overflow: hidden;
 }
-#pjax-bar.pjax-running { background: rgba(49,90,58,0.12); }
+#pjax-bar.pjax-running { background: color-mix(in srgb, var(--color-primary) 12%, transparent); }
 #pjax-bar.pjax-running::after {
     content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 40%;
-    background: #315A3A;
+    position: absolute; top: 0; bottom: 0; width: 40%;
+    background: var(--color-primary);
     animation: pjax-slide 1s ease-in-out infinite;
 }
 @keyframes pjax-slide {
     0%   { inset-inline-start: -40%; }
     100% { inset-inline-start: 110%; }
 }
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

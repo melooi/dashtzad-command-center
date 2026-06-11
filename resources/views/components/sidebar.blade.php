@@ -1,8 +1,8 @@
 {{-- Sidebar navigation --}}
-<aside id="sidebar" class="bg-slate-900 border-l border-slate-800/80 flex flex-col z-20">
+<aside id="sidebar" class="bg-surface border-l border-border/80 flex flex-col z-20">
 
     {{-- Logo + toggle buttons --}}
-    <div class="sb-logo-area h-16 flex items-center justify-between shrink-0 px-4 border-b border-slate-800/80">
+    <div class="sb-logo-area h-16 flex items-center justify-between shrink-0 px-4 border-b border-border/80">
 
         <div class="flex items-center gap-3 min-w-0">
             <div class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center
@@ -10,14 +10,14 @@
                 <i class="fa-solid fa-bolt text-white text-sm"></i>
             </div>
             <div class="sb-text min-w-0">
-                <span class="font-bold text-slate-200 text-base tracking-wide">دشت‌زاد</span>
+                <span class="font-bold text-text-main text-base tracking-wide">دشت‌زاد</span>
                 <span class="text-xs font-normal text-brand-secondary mr-1">پنل</span>
             </div>
         </div>
 
         {{-- Mobile: close button --}}
         <button onclick="closeMobileSidebar()"
-                class="md:hidden p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors shrink-0"
+                class="md:hidden p-1.5 text-text-muted hover:text-text-main hover:bg-border rounded-lg transition-colors shrink-0"
                 title="بستن">
             <i class="fa-solid fa-xmark text-lg"></i>
         </button>
@@ -52,7 +52,7 @@
                 onclick="navigateTo('/products/quick-create')"
                 data-nav-path="/products/quick-create"
                 class="nav-btn w-full text-right flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-colors
-                       {{ request()->is('products/quick-create') ? 'text-brand-primary bg-brand-primary/10' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50' }}">
+                       {{ request()->is('products/quick-create') ? 'text-brand-primary bg-brand-primary/10' : 'text-text-muted hover:text-text-main hover:bg-border/50' }}">
                 افزودن سریع (شیت)
             </button>
             <x-nav.subitem tab="products-incomplete">محصولات ناقص</x-nav.subitem>
@@ -63,7 +63,7 @@
         {{-- دستیار هوشمند --}}
         <x-nav.group title="دستیار هوشمند">
             <x-slot:icon>
-                <i class="fa-solid fa-wand-magic-sparkles text-lg text-indigo-400"></i>
+                <i class="fa-solid fa-wand-magic-sparkles text-lg text-primary"></i>
             </x-slot:icon>
             <x-nav.subitem tab="ai-product-content">محتوای محصول</x-nav.subitem>
             <x-nav.subitem tab="ai-blog-content">محتوای وبلاگ</x-nav.subitem>
@@ -143,18 +143,18 @@
             </x-slot:icon>
             <x-nav.subitem tab="settings-users">مدیریت کاربران</x-nav.subitem>
             <x-nav.subitem tab="settings-roles">نقش‌ها و دسترسی</x-nav.subitem>
-            <x-nav.subitem tab="settings-brand">تنظیمات برند</x-nav.subitem>
+            <x-nav.subitem tab="settings-theme">ظاهر و برند</x-nav.subitem>
             <x-nav.subitem tab="settings-system">پیکربندی سیستم</x-nav.subitem>
         </x-nav.group>
 
     </nav>
 
     {{-- Desktop collapse toggle (bottom, desktop only) --}}
-    <div class="hidden md:block border-t border-slate-800/60 p-2">
+    <div class="hidden md:block border-t border-border/60 p-2">
         <button onclick="toggleSidebar()"
                 id="sb-toggle-btn"
                 class="sb-toggle-btn w-full flex items-center gap-3 px-3 py-2 rounded-xl
-                       text-slate-500 hover:text-slate-300 hover:bg-slate-800/60 transition-colors"
+                       text-text-muted hover:text-text-main hover:bg-border/60 transition-colors"
                 title="جمع کردن منو">
             <i class="fa-solid fa-angles-right text-lg shrink-0"></i>
             <span class="sb-text text-sm font-medium">جمع کردن</span>

@@ -8,14 +8,14 @@
 
 {{-- Drawer panel (slides in from left in RTL layout) --}}
 <div id="activity-drawer"
-     class="fixed top-0 bottom-0 left-0 w-80 max-w-full bg-slate-900 border-r border-slate-800
+     class="fixed top-0 bottom-0 left-0 w-80 max-w-full bg-surface border-r border-border
             transform -translate-x-full transition-transform duration-300 z-50 flex flex-col shadow-2xl">
 
     {{-- Header --}}
-    <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80 shrink-0">
-        <h2 class="text-base font-bold text-white">تاریخچه فعالیت‌ها</h2>
+    <div class="h-16 flex items-center justify-between px-5 border-b border-border/80 shrink-0">
+        <h2 class="text-base font-bold text-text-main">تاریخچه فعالیت‌ها</h2>
         <button onclick="toggleDrawer()"
-                class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors">
+                class="p-2 text-text-muted hover:text-text-main rounded-lg hover:bg-border transition-colors">
             <i class="fa-solid fa-xmark text-lg"></i>
         </button>
     </div>

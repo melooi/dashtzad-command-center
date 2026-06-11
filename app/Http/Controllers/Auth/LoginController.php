@@ -53,7 +53,10 @@ class LoginController extends Controller
         OtpCode::invalidatePhone($phone);
 
         // Generate OTP
-        $code    = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $length  = (int) config('panel.otp_length', 4);
+        $min     = 10 ** ($length - 1);
+        $max     = (10 ** $length) - 1;
+        $code    = (string) random_int($min, $max);
         $hashed  = hash('sha256', $code);
         $otp     = OtpCode::create([
             'phone'      => $phone,
@@ -85,9 +88,10 @@ class LoginController extends Controller
             return response()->json(['ok' => false, 'message' => 'جلسه منقضی شده است. دوباره شماره وارد کنید.']);
         }
 
-        $rawCode = preg_replace('/[^0-9]/', '', (string) $request->input('code', ''));
-        if (strlen($rawCode) !== 6) {
-            return response()->json(['ok' => false, 'message' => 'کد ۶ رقمی وارد کنید']);
+        $rawCode   = preg_replace('/[^0-9]/', '', (string) $request->input('code', ''));
+        $otpLength = (int) config('panel.otp_length', 4);
+        if (strlen($rawCode) !== $otpLength) {
+            return response()->json(['ok' => false, 'message' => "کد {$otpLength} رقمی وارد کنید"]);
         }
 
         $otp = OtpCode::find($otpId);

@@ -86,7 +86,8 @@
                     </div>
 
                     <h2 class="text-lg font-bold text-slate-100 mb-1">تأیید شماره همراه</h2>
-                    <p class="text-sm text-slate-400 mb-0.5 text-center">کد ۶ رقمی ارسال‌شده به</p>
+                    @php($otpLength = (int) config('panel.otp_length', 4))
+                    <p class="text-sm text-slate-400 mb-0.5 text-center">کد {{ $otpLength }} رقمی ارسال‌شده به</p>
                     <p id="display-phone" dir="ltr"
                        class="text-sm font-bold text-brand-primary mb-5 tracking-widest font-mono"></p>
 
@@ -99,14 +100,14 @@
                     </div>
                     @endif
 
-                    {{-- 6 OTP boxes --}}
-                    <div class="flex justify-center gap-2 mb-1 w-full" dir="ltr" id="otp-inputs">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp1">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp2">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp3">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp4">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp5">
-                        <input type="tel" maxlength="1" inputmode="numeric" class="otp-box" id="otp6">
+                    {{-- OTP boxes (count from config) --}}
+                    <div class="flex justify-center gap-2 mb-1 w-full" dir="ltr"
+                         id="otp-inputs" data-otp-length="{{ $otpLength }}">
+                        @for ($i = 0; $i < $otpLength; $i++)
+                            <input type="tel" maxlength="1" inputmode="numeric"
+                                   class="otp-box" data-otp-index="{{ $i }}"
+                                   autocomplete="one-time-code">
+                        @endfor
                     </div>
 
                     <p id="otp-error" class="text-xs text-rose-400 mt-2 mb-2 min-h-[1rem] text-center"></p>
@@ -298,7 +299,7 @@
 const _csrf = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
 let _otpTimer = null;
 let _authPhone = '';
-const OTP_LEN = 6;
+let OTP_LEN = 4; // will be set from DOM on DOMContentLoaded
 
 // ── Digit normalisation (Persian ۰-۹ and Arabic ٠-٩ → 0-9) ─────────────
 function _normDigits(str) {
@@ -354,7 +355,7 @@ async function authSendOtp(resend = false) {
         _clearOtpBoxes();
         authSwitchView('view-otp');
         startOtpTimer(120);
-        document.getElementById('otp1')?.focus();
+        document.querySelector('.otp-box')?.focus();
 
         if (data.dev_otp) {
             const banner = document.getElementById('dev-otp-banner');
@@ -397,7 +398,7 @@ async function authVerifyOtp() {
             if (errEl) errEl.textContent = data.message;
             boxes.forEach(b => { b.classList.add('error'); b.value = ''; b.classList.remove('filled'); });
             setTimeout(() => boxes.forEach(b => b.classList.remove('error')), 400);
-            document.getElementById('otp1')?.focus();
+            document.querySelector('.otp-box')?.focus();
             _updateVerifyBtn();
             return;
         }
@@ -510,6 +511,7 @@ function startOtpTimer(secs) {
 
 // ── DOMContentLoaded ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+    OTP_LEN = Number(document.getElementById('otp-inputs')?.dataset.otpLength || 4);
     const boxes = [...document.querySelectorAll('.otp-box')];
 
     boxes.forEach((box, idx) => {

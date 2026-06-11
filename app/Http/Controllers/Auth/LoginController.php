@@ -118,7 +118,7 @@ class LoginController extends Controller
         }
 
         // Auto-approve admin phone even if previously stuck in pending
-        $adminPhone = $this->normalizePhone(env('PANEL_ADMIN_PHONE', ''));
+        $adminPhone = $this->normalizePhone((string) config('panel.admin_phone', ''));
         if ($adminPhone && $adminPhone === $phone && $user->status !== 'approved') {
             $user->update(['status' => 'approved', 'role' => 'super_admin', 'approved_at' => now()]);
             $user->refresh();
@@ -157,7 +157,7 @@ class LoginController extends Controller
         ];
 
         // Auto-approve if this phone matches the configured admin phone
-        $adminPhone = $this->normalizePhone(env('PANEL_ADMIN_PHONE', ''));
+        $adminPhone = $this->normalizePhone((string) config('panel.admin_phone', ''));
         if ($adminPhone && $adminPhone === $phone) {
             $data['status']      = 'approved';
             $data['role']        = 'super_admin';

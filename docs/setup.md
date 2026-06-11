@@ -146,6 +146,71 @@ php artisan view:cache
 
 ---
 
+## Auto Deploy
+
+هر push به `main` یک GitHub Actions workflow اجرا می‌کند که از طریق SSH به سرور وصل می‌شود و `scripts/deploy.sh` را اجرا می‌کند.
+
+### ۱. ساخت SSH Key
+
+این key را روی ماشین محلی بساز — **نه** روی سرور:
+
+```bash
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/dashtzad_deploy -N ""
+```
+
+دو فایل ساخته می‌شود:
+- `~/.ssh/dashtzad_deploy` — کلید خصوصی (در GitHub Secrets ثبت می‌شود)
+- `~/.ssh/dashtzad_deploy.pub` — کلید عمومی (روی سرور اضافه می‌شود)
+
+### ۲. افزودن Public Key به سرور
+
+```bash
+# کلید عمومی را کپی کن:
+cat ~/.ssh/dashtzad_deploy.pub
+
+# روی سرور (با دسترسی SSH فعلی):
+ssh user@89.45.89.203
+echo "PASTE_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### ۳. ثبت Secrets در GitHub
+
+مسیر: **GitHub → Repository → Settings → Secrets and variables → Actions → New repository secret**
+
+| Secret | مقدار |
+|--------|-------|
+| `SSH_HOST` | `89.45.89.203` |
+| `SSH_USER` | نام کاربر روی سرور (مثلاً `deploy`) |
+| `SSH_PORT` | `22` (یا port سفارشی) |
+| `SSH_PRIVATE_KEY` | محتوای کامل `~/.ssh/dashtzad_deploy` |
+| `APP_PATH` | `/var/www/dashtzad-command-center` |
+
+### ۴. آماده‌سازی سرور
+
+```bash
+# اطمینان از اینکه deploy user می‌تواند git pull کند:
+cd /var/www/dashtzad-command-center
+git remote -v
+git fetch origin main
+
+# مطمئن شو که www-data یا nginx به فایل‌ها دسترسی دارد:
+sudo chown -R deploy:www-data /var/www/dashtzad-command-center
+sudo chmod -R 775 storage bootstrap/cache
+```
+
+### ۵. تست Deploy
+
+```bash
+# از terminal محلی، SSH را دستی امتحان کن:
+ssh -i ~/.ssh/dashtzad_deploy -p 22 user@89.45.89.203 \
+  "bash /var/www/dashtzad-command-center/scripts/deploy.sh"
+
+# یا یک push به main بزن و نتیجه را در GitHub → Actions ببین
+```
+
+---
+
 ## دستورهای مفید
 
 ```bash

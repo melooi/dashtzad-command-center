@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
             box.classList.toggle('filled', box.value.length > 0);
             if (box.value && idx < boxes.length - 1) boxes[idx + 1].focus();
             _updateVerifyBtn();
+            if (boxes.every(b => b.value.length === 1)) authVerifyOtp();
         });
 
         // Keydown: backspace navigation

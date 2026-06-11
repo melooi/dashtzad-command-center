@@ -965,6 +965,11 @@ async function _pjaxLoad(url, state, { push = true } = {}) {
             signal: _pjaxXHR.signal,
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
         });
+        if (res.status === 401) {
+            const data = await res.json().catch(() => ({}));
+            window.location.href = data.redirect ?? '/auth/login';
+            return;
+        }
         if (!res.ok) throw new Error('HTTP ' + res.status);
 
         const html    = await res.text();
